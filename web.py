@@ -1,5 +1,13 @@
 from flask import Flask, render_template, request
+# configuration
+DEBUG = True
+# DATABASE = '/tmp/flaskr.db'
+# SECRET_KEY = 'development key'
+# USERNAME = 'admin'
+# PASSWORD = 'default'
+
 app = Flask(__name__)
+app.config.from_object(__name__)
 
 @app.route('/')
 def index():
@@ -124,4 +132,4 @@ def process_signup():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(app.config['DEBUG'])
