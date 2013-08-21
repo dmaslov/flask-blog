@@ -9,10 +9,10 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+
 @app.route('/')
 def index():
-    #return "Hello World!"
-    return render_template('index.html', name='Dmitry')
+    return render_template('index.html', meta_title='Blog')
 
 
 @app.route('/tag/<tag>')
@@ -20,9 +20,9 @@ def posts_by_tag(tag="notfound"):
     pass
 
 
-@app.route("/post/<permalink>")
-def show_post(permalink="notfound"):
-    pass
+@app.route('/post/<permalink>')
+def show_post(permalink):
+    return render_template('single_post.html', meta_title='SinglePost')
 
 
 @app.route('/newcomment', methods=['POST'])

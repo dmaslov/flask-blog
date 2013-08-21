@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% include 'head.html' %}
+	{% block head %}{% include 'head.html' %}{% endblock %}
 	<body>
 		{% include 'nav.html' %}
 
 		<div class="container">
+			{% block body %}
 			<div class="post clearfix">
 				<div class="row">
 					<div class="col-lg-8">
@@ -33,6 +34,7 @@
 					</div>
 				</div>
 			</div>
+			{% endblock %}
 			{% include 'footer.html' %}
 		</div>
 		<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
