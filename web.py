@@ -1,17 +1,15 @@
-from flask import Flask, render_template, request
-# configuration
-DEBUG = True
-# DATABASE = '/tmp/flaskr.db'
-# SECRET_KEY = 'development key'
-# USERNAME = 'admin'
-# PASSWORD = 'default'
+from flask import Flask, render_template, abort, redirect, url_for, request
+import config
+import post
+
 
 app = Flask(__name__)
-app.config.from_object(__name__)
 
 
 @app.route('/')
 def index():
+    posts = postClass.get_posts(10)
+    print posts
     return render_template('index.html', meta_title='Blog')
 
 
@@ -22,6 +20,8 @@ def posts_by_tag(tag="notfound"):
 
 @app.route('/post/<permalink>')
 def show_post(permalink):
+    if permalink == 'hello':
+        abort(404)
     return render_template('single_post.html', meta_title='SinglePost')
 
 
@@ -35,9 +35,9 @@ def post_comment_like():
     pass
 
 
-@app.route("/404")
-def post_not_found():
-    pass
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html', meta_title='404'), 404
 
 
 @app.route('/newpost')
@@ -122,14 +122,8 @@ def process_signup():
 #             return False
 #     return True
 #
-# connection_string = "mongodb://localhost"
-# connection = pymongo.MongoClient(connection_string)
-# database = connection.blog
-#
-# posts = blogPostDAO.BlogPostDAO(database)
-# users = userDAO.UserDAO(database)
-# sessions = sessionDAO.SessionDAO(database)
 
+postClass = post.Post(config.DATABASE)
 
 if __name__ == '__main__':
-    app.run(app.config['DEBUG'])
+    app.run(debug=config.DEBUG)

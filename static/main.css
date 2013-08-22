@@ -60,8 +60,24 @@ footer a {
   color: #ccccff;
 }
 
-@mediamax-width767px{
-.section-preview .image img {
-width:100%;
+.not-found {
+	text-align: center;
 }
+
+.not-found h1 {
+	font-size: 100px !important;
+	font-weight: bold;
+	margin-top: 50px;
+}
+
+.not-found p {
+	color: #cccccc;
+	font-size: 11px;
+	margin:-26px 0 0 8px;
+}
+
+@mediamax-width767px{
+	.section-preview .image img {
+		width:100%;
+	}
 }
