@@ -1,44 +1,41 @@
 {% extends 'index.html' %}
 {% block body %}
-	<div class="post clearfix">
-		<div class="row">
-			<div class="col-lg-8">
-				<div class="page-header">
-					<h1><a>memo#0</a></h1>
-					<p><i>Posted:&nbsp;</i> Fri, 09 Aug 2013 <i>By lazzy</i></p>
-					<div class="social row-fluid">
-				        <!-- AddThis Button BEGIN -->
-				        <div class="addthis_toolbox addthis_default_style addthis_16x16_style">
-							<a class="addthis_button_twitter"></a>
-							<a class="addthis_button_facebook"></a>
-							<a class="addthis_button_google_plusone_share"></a>
-							<a class="addthis_button_evernote"></a>
-							<a class="addthis_button_pocket"></a>
+	{% if post %}
+		<div class="post clearfix">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="page-header">
+						<h1>{{ post['title'] }}</h1>
+						<p><i>Posted:&nbsp;</i> {{ post['date'] }} <i>By {{ post['author'] }}</i></p>
+						<div class="social row-fluid">
+					        <!-- AddThis Button BEGIN -->
+					        <div class="addthis_toolbox addthis_default_style addthis_16x16_style">
+								<a class="addthis_button_twitter"></a>
+								<a class="addthis_button_facebook"></a>
+								<a class="addthis_button_google_plusone_share"></a>
+								<a class="addthis_button_evernote"></a>
+								<a class="addthis_button_pocket"></a>
+					        </div>
+					        <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+					        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51faccde477480fa"></script>
+					        <!-- AddThis Button END -->
 				        </div>
-				        <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-				        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51faccde477480fa"></script>
-				        <!-- AddThis Button END -->
-			        </div>
-				</div>
-				<div class="content">
-					<p><strong>В <code>mySQL</code> создавая таблицу в процессе транзакции нельзя будет ее удалить при роллбэке.</strong><br> Это связанно с тем, что <code>CREATE TABLE</code> в <code>InnoDB</code> обрабатывается как отдельная транзакция. Это означает что <code>ROLLBACK</code>, инизиализируемый пользователем, не отменит <code>CREATE TABLE</code> сделанный в процессе транзакции.<br><a href="http://dev.mysql.com/doc/refman/5.1/en/implicit-commit.html" title="MySQL 5.1 Reference Manual :: 13.3.3 Statements That Cause an Implicit Commit" target="_blank">MySQL Reference Manual </a></p>
-				</div>
-				<div class="infopanel">
-					<div class="tags">
-						<i>tags:&nbsp;</i>
-						<a href="/tag/wrist">wrist</a>
-						&nbsp;<a href="/tag/pasta">pasta</a>
-						&nbsp;<a href="/tag/pantyhose">pantyhose</a>
-						&nbsp;<a href="/tag/freon">freon</a>
-						&nbsp;<a href="/tag/tempo">tempo</a>
-						&nbsp;<a href="/tag/pail">pail</a>
-						&nbsp;<a href="/tag/atom">atom</a>
-						&nbsp;<a href="/tag/hydrogen">hydrogen</a>
-						&nbsp;<a href="/tag/pilot">pilot</a>
-						&nbsp;<a href="/tag/secretary">secretary</a>
+					</div>
+					<div class="content">
+						{{ post['body']|safe }}
+					</div>
+					<div class="infopanel">
+						<div class="tags">
+							<i>tags:</i>
+							{% if post['tags'] %}
+								{% for tag in post['tags'] %}
+									&nbsp;<a href="/tag/{{ tag }}">{{ tag }}</a>
+								{% endfor %}
+							{% endif %}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	{% endif %}
 {% endblock %}
