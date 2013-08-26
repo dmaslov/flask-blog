@@ -1,22 +1,27 @@
 from flask import Flask, render_template, abort, redirect, url_for, request
-import config
 import post
 import pagination
 
 
 app = Flask(__name__)
+app.config.from_object('config')
 
 
-@app.route('/')
-def index():
-    posts = postClass.get_posts(10)
-    #pagination
-    return render_template('index.html', posts=posts, meta_title='Blog')
+@app.route('/', defaults={'page': 1})
+@app.route('/page/<int:page>')
+def index(page):
+    posts = postClass.get_posts(app.config['PER_PAGE'])
+    count = postClass.get_total_count()
+    if not posts and page != 1:
+        abort(404)
+    pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
+    # print pag.has_next()
+    return render_template('index.html', posts=posts, pagination=pag, meta_title='Blog')
 
 
 @app.route('/tag/<tag>')
 def posts_by_tag(tag):
-    posts = postClass.get_posts(10, tag)
+    posts = postClass.get_posts(app.config['PER_PAGE'], tag)
     #pagination
     if not posts:
         abort(404)
@@ -71,6 +76,6 @@ def process_signup():
     pass
 
 
-postClass = post.Post(config.DATABASE)
+postClass = post.Post(app.config['DATABASE'])
 if __name__ == '__main__':
-    app.run(debug=config.DEBUG)
+    app.run(debug=app.config['DEBUG'])
