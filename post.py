@@ -8,12 +8,12 @@ class Post:
         self.db = database
         self.posts = database.posts
 
-    def get_posts(self, num_posts, tag=None):
+    def get_posts(self, limit, skip, tag=None):
         cond = {}
         if tag is not None:
             cond = {'tags': tag}
-
-        cursor = self.posts.find(cond).sort('date', direction=-1).limit(num_posts)
+        print skip, limit
+        cursor = self.posts.find(cond).sort('date', direction=-1).skip(skip).limit(limit)
         l = []
 
         for post in cursor:
@@ -32,9 +32,14 @@ class Post:
         return l
 
     def get_post_by_permalink(self, permalink):
-        print permalink
         post = self.posts.find_one({'permalink': permalink})
         if post is not None:
             post['date'] = post['date'].strftime("%a, %d %b %Y")
 
         return post
+
+    def get_total_count(self, tag=None):
+        if tag is not None:
+            return self.posts.find({'tags': tag}).count()
+        else:
+            return self.posts.count()

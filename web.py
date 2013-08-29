@@ -1,30 +1,40 @@
 from flask import Flask, render_template, abort, redirect, url_for, request
+#from flask.ext.heroku import Heroku
+#from flask.ext.login import LoginManager
+#import os
 import post
 import pagination
 
 
 app = Flask(__name__)
 app.config.from_object('config')
+#heroku = Heroku(app)
+#login_manager = LoginManager(app)
 
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page/<int:page>')
 def index(page):
-    posts = postClass.get_posts(app.config['PER_PAGE'])
+    skip = (page - 1) * app.config['PER_PAGE']
+    posts = postClass.get_posts(app.config['PER_PAGE'], skip)
     count = postClass.get_total_count()
-    if not posts and page != 1:
+    if not posts:
         abort(404)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    # print pag.has_next()
     return render_template('index.html', posts=posts, pagination=pag, meta_title='Blog')
 
 
-@app.route('/tag/<tag>')
-def posts_by_tag(tag):
-    posts = postClass.get_posts(app.config['PER_PAGE'], tag)
-    #pagination
+@app.route('/tag/<tag>', defaults={'page': 1})
+#@app.route('/t_page/<int:page>/<tag>')
+def posts_by_tag(tag, page):
+    # TODO: pagination for by_tag_view
+    # skip = (page - 1) * app.config['PER_PAGE']
+    skip = 0
+    posts = postClass.get_posts(app.config['PER_PAGE'], skip, tag)
+    # count = postClass.get_total_count(tag)
     if not posts:
         abort(404)
+    # pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts, meta_title='Posts by tag: tag')
 
 
@@ -76,6 +86,13 @@ def process_signup():
     pass
 
 
+def url_for_other_page(page):
+    args = request.view_args.copy()
+    args['page'] = page
+    return url_for(request.endpoint, **args)
+
+
+app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 postClass = post.Post(app.config['DATABASE'])
 if __name__ == '__main__':
     app.run(debug=app.config['DEBUG'])

@@ -12,14 +12,14 @@
 								<div class="col-lg-8">
 									<div class="page-header">
 										<h1><a href="/post/{{ post['permalink'] }}">{{ post['title'] }}</a></h1>
-										<p><i>Posted:&nbsp;</i> {{ post['post_date'] }} <i>By {{ post['author'] }}</i></p>
+										<p><i>Posted:&nbsp;{{ post['post_date'] }} By {{ post['author'] }}</i></p>
 									</div>
 									<div class="content">
 										{{ post['body']|safe }}
 									</div>
 									<div class="infopanel">
 										<div class="tags">
-											<i>tags:</i>
+											<li class="icon-tags" title="tags"></li>
 											{% if post['tags'] %}
 												{% for tag in post['tags'] %}
 													&nbsp;<a href="/tag/{{ tag }}">{{ tag }}</a>
@@ -33,6 +33,23 @@
 					{% endfor %}
 				{% endif %}
 			{% endblock %}
+			{% if pagination and pagination.pages > 1 %}
+				<div class="pagination-wrap">
+				<ul class="pagination">
+				  {%- for page in pagination.iter_pages() %}
+				    {% if page %}
+				        <li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+				    {% else %}
+				      <li><span class=ellipsis>…</span></li>
+				    {% endif %}
+				  {%- endfor %}
+				  {% if pagination.has_next %}
+				    <li><a href="{{ url_for_other_page(pagination.page + 1)
+				      }}">&raquo;</a></li>
+				  {% endif %}
+				</ul>
+				</div>
+			{% endif %}
 			{% include 'footer.html' %}
 		</div>
 		<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
