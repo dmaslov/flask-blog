@@ -15,7 +15,11 @@
 										<p><i>Posted:&nbsp;{{ post['post_date'] }} By {{ post['author'] }}</i></p>
 									</div>
 									<div class="content">
-										{{ post['body']|safe }}
+										{% if post['preview'] %}
+											{{ post['preview']|safe }}
+										{% else %}
+											{{ post['body']|safe }}
+										{% endif %}
 									</div>
 									<div class="infopanel">
 										<div class="tags">

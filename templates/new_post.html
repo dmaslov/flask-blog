@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+{% block body %}
+	<div class="post clearfix" xmlns="http://www.w3.org/1999/html">
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="page-header">
+					<h1>New Post</h1>
+				</div>
+				<div class="content">
+					{% if error and error_type == 'post' %}
+						<div>{{ error_message }}</div>
+					{% elif response_message != None %}
+						<div>{{ response_message }}</div>
+					{% endif %}
+					<form id="post-form" role="form" method="post" action="/newpost">
+						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+							{% if error and error_type == 'validate' %}
+								<label class="control-label" for="post-title">Required Field</label>
+							{% endif %}
+						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="Post Title" required>
+					    </div>
+						<div class="form-group">
+						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Shost Text"></textarea>
+					    </div>
+						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+							{% if error and error_type == 'validate' %}
+								<label class="control-label" for="post-full">Required Field</label>
+							{% endif %}
+						    <textarea id="post-full" name="post-full" class="form-control" rows="6" placeholder="Full Text" required></textarea>
+					    </div>
+						<div class="form-group">
+						    <label for="post-tags">Tags</label>
+						    <input type="text" name="post-tags" class="form-control" id="post-tags" placeholder="Comma separated">
+					    </div>
+						<div class="form-group">
+							<input type="hidden" name="post-preview" id="preview">
+						    <input id="post-submit" type="submit" class="btn btn-primary" value="Submit">
+							<input id="post-preview" type="submit" class="btn" value="Preview">
+					    </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

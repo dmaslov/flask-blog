@@ -1,3 +1,5 @@
+import cgi
+import re
 from flask import Flask, render_template, abort, redirect, url_for, request
 #from flask.ext.heroku import Heroku
 #from flask.ext.login import LoginManager
@@ -53,12 +55,45 @@ def page_not_found(error):
 
 @app.route('/newpost')
 def get_newpost():
-    pass
+    return render_template('new_post.html', meta_title='New Post')
 
 
 @app.route('/newpost', methods=['POST'])
 def post_newpost():
-    pass
+    error = False
+    error_type = 'validate'
+    error_message = None
+    response_message = 'New post was created!'
+    if not request.form['post-title'] or not request.form['post-full']:
+        error = True
+        response_message = None
+    else:
+        tags = cgi.escape(request.form['post-tags'])
+        tags_array = extract_tags(tags)
+        author = 'lazzy' #TODO: replace with logged in username
+
+        post_data = {'title': request.form['post-title'],
+                     'preview': request.form['post-short'],
+                     'body': request.form['post-full'],
+                     'tags': tags_array,
+                     'author': author}
+
+        post = postClass.validate_post_data(post_data)
+        if request.form['post-preview'] == '1':
+            return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
+        else:
+            post_id = postClass.create_new_post(post_data)
+            if not post_id:
+                response_message = None
+                error = True
+                error_type = 'post'
+                error_message = 'Inserting post error'
+    return render_template('new_post.html',
+                           meta_title='New Post',
+                           error=error,
+                           error_type=error_type,
+                           error_message=error_message,
+                           response_message=response_message)
 
 
 @app.route('/signup')
@@ -90,6 +125,19 @@ def url_for_other_page(page):
     args = request.view_args.copy()
     args['page'] = page
     return url_for(request.endpoint, **args)
+
+
+def extract_tags(tags):
+    whitespace = re.compile('\s')
+    nowhite = whitespace.sub("", tags)
+    tags_array = nowhite.split(',')
+
+    cleaned = []
+    for tag in tags_array:
+        if tag not in cleaned and tag != "":
+            cleaned.append(tag)
+
+    return cleaned
 
 
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
