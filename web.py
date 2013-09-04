@@ -12,8 +12,8 @@ import pagination
 
 
 app = Flask(__name__)
-app.config.from_object('config')
 Markdown(app)
+app.config.from_object('config')
 #heroku = Heroku(app)
 #login_manager = LoginManager(app)
 
