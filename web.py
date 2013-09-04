@@ -1,6 +1,8 @@
 import cgi
 import re
-from flask import Flask, render_template, abort, redirect, url_for, request
+import string
+import random
+from flask import Flask, render_template, abort, redirect, url_for, request, flash, session
 #from flask.ext.heroku import Heroku
 #from flask.ext.login import LoginManager
 #import os
@@ -62,11 +64,9 @@ def get_newpost():
 def post_newpost():
     error = False
     error_type = 'validate'
-    error_message = None
-    response_message = 'New post was created!'
     if not request.form['post-title'] or not request.form['post-full']:
         error = True
-        response_message = None
+        #flash("Title and Full text can't be blank!", 'error')
     else:
         tags = cgi.escape(request.form['post-tags'])
         tags_array = extract_tags(tags)
@@ -84,16 +84,16 @@ def post_newpost():
         else:
             post_id = postClass.create_new_post(post_data)
             if not post_id:
-                response_message = None
                 error = True
                 error_type = 'post'
-                error_message = 'Inserting post error'
+                flash('Inserting post error..', 'error')
+            else:
+                flash('New post successfuly created!', 'success')
+
     return render_template('new_post.html',
                            meta_title='New Post',
                            error=error,
-                           error_type=error_type,
-                           error_message=error_message,
-                           response_message=response_message)
+                           error_type=error_type)
 
 
 @app.route('/signup')
@@ -121,6 +121,11 @@ def process_signup():
     pass
 
 
+@app.template_filter('formatdate')
+def format_datetime_filter(input, format="%a, %d %b %Y"):
+    return input.strftime(format)
+
+
 def url_for_other_page(page):
     args = request.view_args.copy()
     args['page'] = page
@@ -140,7 +145,33 @@ def extract_tags(tags):
     return cleaned
 
 
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(400)
+
+
+def random_string(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for x in range(size))
+
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = random_string()
+    return session['_csrf_token']
+
+
+if not app.config['DEBUG']:
+    import logging
+    from logging import FileHandler
+    file_handler = FileHandler(app.config['LOG_FILE'])
+    file_handler.setLevel(logging.WARNING)
+    app.logger.addHandler(file_handler)
+
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 postClass = post.Post(app.config['DATABASE'])
 if __name__ == '__main__':
     app.run(debug=app.config['DEBUG'])

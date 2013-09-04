@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% block head %}{% include 'head.html' %}{% endblock %}
+	{%- block head -%}{%- include 'head.html' -%}{%- endblock -%}
 	<body>
-		{% include 'nav.html' %}
+		{%- include 'nav.html' -%}
 		<div class="container">
-			{% block body %}
-				{% if posts %}
-					{% for post in posts %}
+			{%- block body -%}
+				{%- if posts -%}
+					{%- for post in posts -%}
 						<div class="post clearfix">
 							<div class="row">
 								<div class="col-lg-8">
 									<div class="page-header">
 										<h1><a href="/post/{{ post['permalink'] }}">{{ post['title'] }}</a></h1>
-										<p><i>Posted:&nbsp;{{ post['post_date'] }} By {{ post['author'] }}</i></p>
+										<p><i>Posted:&nbsp;{{ post['date'] |formatdate }} By {{ post['author'] }}</i></p>
 									</div>
 									<div class="content">
-										{% if post['preview'] %}
+										{%- if post['preview'] -%}
 											{{ post['preview']|safe }}
-										{% else %}
+										{%- else -%}
 											{{ post['body']|safe }}
-										{% endif %}
+										{%- endif -%}
 									</div>
 									<div class="infopanel">
 										<div class="tags">
 											<li class="icon-tags" title="tags"></li>
-											{% if post['tags'] %}
-												{% for tag in post['tags'] %}
+											{%- if post['tags'] -%}
+												{%- for tag in post['tags'] -%}
 													&nbsp;<a href="/tag/{{ tag }}">{{ tag }}</a>
-												{% endfor %}
-											{% endif %}
+												{%- endfor -%}
+											{%- endif -%}
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					{% endfor %}
-				{% endif %}
-			{% endblock %}
-			{% if pagination and pagination.pages > 1 %}
+					{%- endfor -%}
+				{%- endif -%}
+			{%- endblock -%}
+			{%- if pagination and pagination.pages > 1 -%}
 				<div class="pagination-wrap">
 				<ul class="pagination">
-				  {%- for page in pagination.iter_pages() %}
-				    {% if page %}
-				        <li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
-				    {% else %}
+				  {%- for page in pagination.iter_pages() -%}
+				    {%- if page -%}
+				        <li {%- if page == pagination.page -%}class="active"{%- endif -%}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+				    {%- else -%}
 				      <li><span class=ellipsis>…</span></li>
-				    {% endif %}
-				  {%- endfor %}
-				  {% if pagination.has_next %}
+				    {%- endif -%}
+				  {%- endfor -%}
+				  {%- if pagination.has_next -%}
 				    <li><a href="{{ url_for_other_page(pagination.page + 1)
 				      }}">&raquo;</a></li>
-				  {% endif %}
+				  {%- endif -%}
 				</ul>
 				</div>
-			{% endif %}
-			{% include 'footer.html' %}
+			{%- endif -%}
+			{%- include 'footer.html' -%}
 		</div>
 		<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>

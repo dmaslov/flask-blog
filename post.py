@@ -18,7 +18,6 @@ class Post:
         l = []
 
         for post in cursor:
-            post['date'] = post['date'].strftime("%a, %d %b %Y")
             if 'tags' not in post:
                 post['tags'] = []
             if 'comments' not in post:
@@ -29,7 +28,7 @@ class Post:
             l.append({'title': post['title'],
                       'body': post['body'],
                       'preview': post['preview'],
-                      'post_date': post['date'],
+                      'date': post['date'],
                       'permalink': post['permalink'],
                       'tags': post['tags'],
                       'author': post['author'],
@@ -38,11 +37,7 @@ class Post:
         return l
 
     def get_post_by_permalink(self, permalink):
-        post = self.posts.find_one({'permalink': permalink})
-        if post is not None:
-            post['date'] = post['date'].strftime("%a, %d %b %Y")
-
-        return post
+        return self.posts.find_one({'permalink': permalink})
 
     def get_total_count(self, tag=None):
         if tag is not None:

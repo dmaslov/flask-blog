@@ -1,12 +1,12 @@
-{% extends 'index.html' %}
-{% block body %}
-	{% if post %}
+{%- extends 'index.html' -%}
+{%- block body -%}
+	{%- if post -%}
 		<div class="post clearfix">
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="page-header">
 						<h1>{{ post['title'] }}</h1>
-						<p><i>Posted:&nbsp;{{ post['date'] }} By {{ post['author'] }}</i></p>
+						<p><i>Posted:&nbsp;{{ post['date'] |formatdate }} By {{ post['author'] }}</i></p>
 						<div class="social row-fluid">
 					        <!-- AddThis Button BEGIN -->
 					        <div class="addthis_toolbox addthis_default_style addthis_16x16_style">
@@ -28,15 +28,15 @@
 					<div class="infopanel">
 						<div class="tags">
 							<i>tags:</i>
-							{% if post['tags'] %}
-								{% for tag in post['tags'] %}
+							{%- if post['tags'] -%}
+								{%- for tag in post['tags'] -%}
 									&nbsp;<a href="/tag/{{ tag }}">{{ tag }}</a>
-								{% endfor %}
-							{% endif %}
+								{%- endfor -%}
+							{%- endif -%}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	{% endif %}
-{% endblock %}
+	{%- endif -%}
+{%- endblock -%}
