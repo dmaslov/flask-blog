@@ -52,11 +52,6 @@ def show_post(permalink):
     return render_template('single_post.html', post=post, meta_title=post['title'])
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html', meta_title='404'), 404
-
-
 @app.route('/newpost')
 def get_newpost():
     return render_template('new_post.html', meta_title='New Post')
@@ -123,6 +118,19 @@ def process_signup():
     pass
 
 
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(400)
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html', meta_title='404'), 404
+
+
 @app.template_filter('formatdate')
 def format_datetime_filter(input, format="%a, %d %b %Y"):
     return input.strftime(format)
@@ -145,14 +153,6 @@ def extract_tags(tags):
             cleaned.append(tag)
 
     return cleaned
-
-
-@app.before_request
-def csrf_protect():
-    if request.method == "POST":
-        token = session.pop('_csrf_token', None)
-        if not token or token != request.form.get('_csrf_token'):
-            abort(400)
 
 
 def random_string(size=6, chars=string.ascii_uppercase + string.digits):
