@@ -58,6 +58,25 @@ footer a {color: #ccccff;}
 	font-size: 11px;
 	margin:-26px 0 0 8px;
 }
+.response {margin-bottom: 24px;}
+.message {
+	padding: 15px 10px;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1.1;
+	text-align: center;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+}
+.success {
+	color: #999;
+	background-color: #dff0d8;
+}
+.error {
+	color: #999;
+	background-color: #f2dede;
+}
 
 @mediamax-width767px{
 	.section-preview .image img {
