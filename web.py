@@ -2,7 +2,8 @@ import cgi
 import re
 import string
 import random
-from flask import Flask, render_template, abort, redirect, url_for, request, flash, session
+from flask import Flask, render_template, abort, url_for, request, flash, session
+from flaskext.markdown import Markdown
 #from flask.ext.heroku import Heroku
 #from flask.ext.login import LoginManager
 #import os
@@ -12,6 +13,7 @@ import pagination
 
 app = Flask(__name__)
 app.config.from_object('config')
+Markdown(app)
 #heroku = Heroku(app)
 #login_manager = LoginManager(app)
 

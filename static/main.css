@@ -78,6 +78,7 @@ footer a {color: #ccccff;}
 	background-color: #f2dede;
 }
 
+.preview-back {margin-top: 20px;}
 @mediamax-width767px{
 	.section-preview .image img {
 		width:100%;

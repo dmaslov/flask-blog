@@ -22,8 +22,8 @@
 				        </div>
 					</div>
 					<div class="content">
-						{{ post['preview']|safe }}
-						{{ post['body']|safe }}
+						{{ post['preview']|markdown }}
+						{{ post['body']|markdown }}
 					</div>
 					<div class="infopanel">
 						<div class="tags">
@@ -34,6 +34,9 @@
 								{%- endfor -%}
 							{%- endif -%}
 						</div>
+					</div>
+					<div class="preview-back">
+						<button id="preview-goback" class="btn btn-primary btn-lg">< Back</button>
 					</div>
 				</div>
 			</div>

@@ -22,8 +22,8 @@
 				        </div>
 					</div>
 					<div class="content">
-						{{ post['preview']|safe }}
-						{{ post['body']|safe }}
+						{{ post['preview']|markdown }}
+						{{ post['body']|markdown }}
 					</div>
 					<div class="infopanel">
 						<div class="tags">
