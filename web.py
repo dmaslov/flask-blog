@@ -5,6 +5,8 @@ import random
 from flask import Flask, render_template, abort, url_for, request, flash, session
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
+from mdx_strike import StrikeExtension
+from mdx_quote import QuoteExtension
 #from flask.ext.heroku import Heroku
 #from flask.ext.login import LoginManager
 #import os
@@ -15,6 +17,8 @@ import pagination
 app = Flask(__name__)
 md = Markdown(app)
 md.register_extension(GitHubGistExtension)
+md.register_extension(StrikeExtension)
+md.register_extension(QuoteExtension)
 app.config.from_object('config')
 #heroku = Heroku(app)
 #login_manager = LoginManager(app)

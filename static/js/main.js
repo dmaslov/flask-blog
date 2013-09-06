@@ -1,3 +1,4 @@
+window.MDM_SILENT = true;
 $(function(){
     $('#post-preview').on('click', function(){
         var postForm = $('#post-form');
@@ -11,4 +12,6 @@ $(function(){
         event.preventDefault();
         window.history.back(1);
     });
+    $('#post-short').mdmagick();
+    $('#post-full').mdmagick();
 });

@@ -70,6 +70,11 @@ footer a {color: #d6d8dd;}
 
 .preview-back {margin-top: 20px;}
 
+div.mdm-buttons {width: 100% !important; background-color: #d6d8dd;}
+div.mdm-buttons ul {margin: 10px 0 10px -30px;}
+.mdm-control a {font-size: 16px !important;}
+.mdm-control a.bigger {font-size: 2em !important;}
+
 @mediamax-width767px{
 	.section-preview .image img {
 		width:100%;
