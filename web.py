@@ -7,6 +7,11 @@ from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
 from mdx_strike import StrikeExtension
 from mdx_quote import QuoteExtension
+
+from urlparse import urljoin
+from flask import request
+from werkzeug.contrib.atom import AtomFeed
+
 #from flask.ext.heroku import Heroku
 #from flask.ext.login import LoginManager
 #import os
@@ -124,6 +129,20 @@ def process_signup():
     pass
 
 
+@app.route('/recent.atom')
+def recent_feed():
+    feed = AtomFeed('Recent Articles',
+                    feed_url=request.url, url=request.url_root)
+    posts = postClass.get_posts(app.config['PER_PAGE'], 0)
+    for post in posts:
+        feed.add(post['title'], md(post['body']),
+                 content_type='html',
+                 author=post['author'],
+                 url=make_external(post['permalink']),
+                 updated=post['date'])
+    return feed.get_response()
+
+
 @app.before_request
 def csrf_protect():
     if request.method == "POST":
@@ -169,6 +188,10 @@ def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = random_string()
     return session['_csrf_token']
+
+
+def make_external(url):
+    return urljoin(request.url_root, url)
 
 
 if not app.config['DEBUG']:
