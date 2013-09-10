@@ -56,47 +56,43 @@ def posts_by_tag(tag, page):
 
 
 @app.route('/post/<permalink>')
-def show_post(permalink):
+def single_post(permalink):
     post = postClass.get_post_by_permalink(permalink)
     if not post:
         abort(404)
     return render_template('single_post.html', post=post, meta_title=post['title'])
 
 
-@app.route('/newpost')
-def get_newpost():
-    return render_template('new_post.html', meta_title='New Post')
-
-
-@app.route('/newpost', methods=['POST'])
-def post_newpost():
+@app.route('/newpost', methods=['GET', 'POST'])
+def new_post():
     error = False
     error_type = 'validate'
-    if not request.form['post-title'] or not request.form['post-full']:
-        error = True
-        #flash("Title and Full text can't be blank!", 'error')
-    else:
-        tags = cgi.escape(request.form['post-tags'])
-        tags_array = extract_tags(tags)
-        author = 'lazzy' #TODO: replace with logged in username
-
-        post_data = {'title': request.form['post-title'],
-                     'preview': request.form['post-short'],
-                     'body': request.form['post-full'],
-                     'tags': tags_array,
-                     'author': author}
-
-        post = postClass.validate_post_data(post_data)
-        if request.form['post-preview'] == '1':
-            return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
+    if request.method == 'POST':
+        if not request.form['post-title'] or not request.form['post-full']:
+            error = True
+            #flash("Title and Full text can't be blank!", 'error')
         else:
-            post_id = postClass.create_new_post(post_data)
-            if not post_id:
-                error = True
-                error_type = 'post'
-                flash('Inserting post error..', 'error')
+            tags = cgi.escape(request.form['post-tags'])
+            tags_array = extract_tags(tags)
+            author = 'lazzy' #TODO: replace with logged in username
+
+            post_data = {'title': request.form['post-title'],
+                         'preview': request.form['post-short'],
+                         'body': request.form['post-full'],
+                         'tags': tags_array,
+                         'author': author}
+
+            post = postClass.validate_post_data(post_data)
+            if request.form['post-preview'] == '1':
+                return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
             else:
-                flash('New post successfuly created!', 'success')
+                post_id = postClass.create_new_post(post_data)
+                if not post_id:
+                    error = True
+                    error_type = 'post'
+                    flash('Inserting post error..', 'error')
+                else:
+                    flash('New post successfuly created!', 'success')
 
     return render_template('new_post.html',
                            meta_title='New Post',
@@ -104,32 +100,17 @@ def post_newpost():
                            error_type=error_type)
 
 
-@app.route('/signup')
-def present_signup():
-    pass
-
-
-@app.route('/login')
-def present_login():
-    pass
-
-
-@app.route('/login', methods=['POST'])
-def process_login():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     pass
 
 
 @app.route('/logout')
-def process_logout():
+def logout():
     pass
 
 
-@app.route('/signup', methods=['POST'])
-def process_signup():
-    pass
-
-
-@app.route('/recent.atom')
+@app.route('/recent_feed')
 def recent_feed():
     feed = AtomFeed('Recent Articles',
                     feed_url=request.url, url=request.url_root)

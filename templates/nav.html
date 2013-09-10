@@ -1,6 +1,6 @@
 <div class="navbar navbar-default navbar-fixed-top">
 	<div class="navbar-header">
-		<a href="/" class="navbar-brand">Home</a>
+		<a href="{{ url_for('index') }}" class="navbar-brand">Home</a>
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
@@ -9,9 +9,9 @@
 	</div>
 	<div class="navbar-collapse collapse" id="navbar-main">
 		<ul class="nav navbar-nav">
-			<li><a class="icon-rss" href="{{ url_for('recent_feed') }}"></a></li>
-			<li><a href="/newpost">New Post</a></li>
-			<li><a href="">Logout</a></li>
+			<li><a href="{{ url_for('recent_feed') }}" class="icon-rss"></a></li>
+			<li><a href="{{ url_for('new_post') }}">New Post</a></li>
+			<li><a href="{{ url_for('logout') }}">Logout</a></li>
 		</ul>
 	</div>
 </div>
