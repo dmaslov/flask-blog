@@ -12,6 +12,10 @@ $(function(){
         event.preventDefault();
         window.history.back(1);
     });
-    $('#post-short').mdmagick();
-    $('#post-full').mdmagick();
+    if($('#post-short').length && $('#post-full').length) {
+        $('#post-short').mdmagick();
+        $('#post-full').mdmagick();
+    }
+
+    $('a[data-target="_blank"]').attr('target', '_blank');
 });

@@ -4,22 +4,29 @@
 		<div class="row">
 			{%- if posts -%}
 				<h1>Posts List</h1>
-				<div class="">
-					<table class="table table-striped">
-						<tr>
-							<th>Title</th>
-							<th>Post Date</th>
-							<th>Action</th>
-						</tr>
-						{%- for post in posts -%}
-						<tr>
-							<td>{{ post['title'] }}</td>
-							<td>{{ post['date'] |formatdate }}</td>
-							<td><a href="" class="icon-remove-sign bigger icon"></a>&nbsp;&nbsp;<a href="" class="icon-eye-open bigger icon"></a></td>
-						</tr>
-						{%- endfor -%}
-					</table>
-				</div>
+				{%- with messages = get_flashed_messages(with_categories=True) -%}
+                    {%- if messages -%}
+                        {%- for category, message in messages -%}
+                            <div class="response">
+                                <span class="message {{ category }}">{%- if category == 'success' -%}✔{%- endif -%}&nbsp;{{ message }}</span>
+                            </div>
+                        {%- endfor -%}
+                    {%- endif -%}
+                {%- endwith -%}
+				<table class="table table-striped">
+					<tr>
+						<th>Title</th>
+						<th>Post Date</th>
+						<th>Action</th>
+					</tr>
+					{%- for post in posts -%}
+					<tr>
+						<td><a title="Preview" href="{{ url_for('single_post', permalink=post['permalink']) }}" data-target="_blank">{{ post['title'] }}</a></td>
+						<td>{{ post['date'] |formatdate }}</td>
+						<td><a title="Edit" href="{{ url_for('post_edit', id=post['id']) }}" class="icon-edit-sign bigger icon"></a>&nbsp;&nbsp;<a title="Delete" href="{{ url_for('post_del', id=post['id']) }}" class="icon-remove-sign bigger icon"></a></td>
+					</tr>
+					{%- endfor -%}
+				</table>
 			{%- else -%}
 				<h1>Posts not found</h1>
 			{%- endif -%}

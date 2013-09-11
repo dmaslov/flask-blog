@@ -13,10 +13,8 @@ class User:
     def login(self, username, password):
         response = {'error': None, 'user': None}
         try:
-            users = self.users_collection.find({'_id': username})
-            admin = [user for user in users]
-            if len(admin):
-                admin = admin[0]
+            admin = self.users_collection.find_one({'_id': username})
+            if admin:
                 if self.validate_login(admin['password'], password):
                     self.username = admin['_id']
                     self.email = admin['email']
@@ -38,8 +36,7 @@ class User:
         return True
 
     def logout(self):
-        try:
-            session.pop(self.session_key)
+        if session.pop(self.session_key, None):
             return True
-        except:
+        else:
             return False

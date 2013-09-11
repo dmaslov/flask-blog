@@ -2,6 +2,7 @@ import sys
 import re
 import datetime
 import cgi
+from bson.objectid import ObjectId
 
 
 class Post:
@@ -25,7 +26,8 @@ class Post:
             if 'preview' not in post:
                 post['preview'] = ''
 
-            l.append({'title': post['title'],
+            l.append({'id': post['_id'],
+                      'title': post['title'],
                       'body': post['body'],
                       'preview': post['preview'],
                       'date': post['date'],
@@ -38,6 +40,9 @@ class Post:
 
     def get_post_by_permalink(self, permalink):
         return self.posts.find_one({'permalink': permalink})
+
+    def get_post_by_id(self, post_id):
+        return self.posts.find_one({'_id': ObjectId(post_id)})
 
     def get_total_count(self, tag=None):
         if tag is not None:
@@ -53,6 +58,16 @@ class Post:
             print "Error inserting post"
 
         return post_id
+
+    def delete_post(self, id):
+        try:
+            if self.get_post_by_id(id) and self.posts.remove({'_id': ObjectId(id)}):
+                return True
+            else:
+                return False
+        except:
+            print "Error removing post"
+
 
     def validate_post_data(self, post_data):
         exp = re.compile('\W')

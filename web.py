@@ -74,7 +74,7 @@ def new_post():
             if not session.get('user'):
                 error = True
                 error_type = 'login'
-                flash('You need to gog in before creating new post', 'error')
+                flash('You need to log in before creating new post', 'error')
             else:
                 tags = cgi.escape(request.form['post-tags'])
                 tags_array = extract_tags(tags)
@@ -104,17 +104,40 @@ def new_post():
 
 @app.route('/posts_list', defaults={'page': 1})
 def posts(page):
-    posts = postClass.get_posts(app.config['PER_PAGE'], 0)
-    if not posts:
-        abort(404)
+    if not session.get('user'):
+        return redirect(url_for('index'))
+    else:
+        posts = postClass.get_posts(app.config['PER_PAGE'], 0)
+        if not posts:
+            abort(404)
+
     return render_template('posts.html', posts=posts, meta_title='Posts List')
+
+
+@app.route('/post_edit?id=<id>')
+def post_edit(id):
+    pass
+
+
+@app.route('/post_delete?id=<id>')
+def post_del(id):
+    if session.get('user'):
+        if id:
+            if postClass.delete_post(id):
+                flash('Post successfuly removed!', 'success')
+            else:
+                flash('Remove post error', 'error')
+        else:
+            flash('Remove post error', 'error')
+    else:
+        flash('You need to log in', 'error')
+    return redirect(url_for('posts'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = False
     error_type = 'validate'
-
     if request.method == 'POST':
         username = request.form['login-username']
         password = request.form['login-password']
