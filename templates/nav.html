@@ -10,8 +10,11 @@
 	<div class="navbar-collapse collapse" id="navbar-main">
 		<ul class="nav navbar-nav">
 			<li><a href="{{ url_for('recent_feed') }}" class="icon-rss"></a></li>
+			{% if session.user %}
+				<li><a href="{{ url_for('posts') }}">Posts List</a></li>
 			<li><a href="{{ url_for('new_post') }}">New Post</a></li>
 			<li><a href="{{ url_for('logout') }}">Logout</a></li>
+			{% endif %}
 		</ul>
 	</div>
 </div>

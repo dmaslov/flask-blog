@@ -2,7 +2,7 @@ import cgi
 import re
 import string
 import random
-from flask import Flask, render_template, abort, url_for, request, flash, session
+from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
 from mdx_strike import StrikeExtension
@@ -13,9 +13,9 @@ from flask import request
 from werkzeug.contrib.atom import AtomFeed
 
 #from flask.ext.heroku import Heroku
-#from flask.ext.login import LoginManager
 #import os
 import post
+import user
 import pagination
 
 
@@ -26,7 +26,6 @@ md.register_extension(StrikeExtension)
 md.register_extension(QuoteExtension)
 app.config.from_object('config')
 #heroku = Heroku(app)
-#login_manager = LoginManager(app)
 
 
 @app.route('/', defaults={'page': 1})
@@ -72,27 +71,30 @@ def new_post():
             error = True
             #flash("Title and Full text can't be blank!", 'error')
         else:
-            tags = cgi.escape(request.form['post-tags'])
-            tags_array = extract_tags(tags)
-            author = 'lazzy' #TODO: replace with logged in username
-
-            post_data = {'title': request.form['post-title'],
-                         'preview': request.form['post-short'],
-                         'body': request.form['post-full'],
-                         'tags': tags_array,
-                         'author': author}
-
-            post = postClass.validate_post_data(post_data)
-            if request.form['post-preview'] == '1':
-                return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
+            if not session.get('user'):
+                error = True
+                error_type = 'login'
+                flash('You need to gog in before creating new post', 'error')
             else:
-                post_id = postClass.create_new_post(post_data)
-                if not post_id:
-                    error = True
-                    error_type = 'post'
-                    flash('Inserting post error..', 'error')
+                tags = cgi.escape(request.form['post-tags'])
+                tags_array = extract_tags(tags)
+                post_data = {'title': request.form['post-title'],
+                             'preview': request.form['post-short'],
+                             'body': request.form['post-full'],
+                             'tags': tags_array,
+                             'author': session.user.username}
+
+                post = postClass.validate_post_data(post_data)
+                if request.form['post-preview'] == '1':
+                    return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
                 else:
-                    flash('New post successfuly created!', 'success')
+                    post_id = postClass.create_new_post(post_data)
+                    if not post_id:
+                        error = True
+                        error_type = 'post'
+                        flash('Inserting post error..', 'error')
+                    else:
+                        flash('New post successfuly created!', 'success')
 
     return render_template('new_post.html',
                            meta_title='New Post',
@@ -100,14 +102,56 @@ def new_post():
                            error_type=error_type)
 
 
+@app.route('/posts_list', defaults={'page': 1})
+def posts(page):
+    posts = postClass.get_posts(app.config['PER_PAGE'], 0)
+    if not posts:
+        abort(404)
+    return render_template('posts.html', posts=posts, meta_title='Posts List')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
+    error = False
+    error_type = 'validate'
+
+    if request.method == 'POST':
+        username = request.form['login-username']
+        password = request.form['login-password']
+        if not username or not password:
+            error = True
+            flash('Username and Password fields are required', 'error')
+        else:
+            user_data = userClass.login(username, password)
+            if user_data['error']:
+                error = True
+                error_type = 'login'
+                flash(user_data['error'], 'error')
+            else:
+                userClass.start_session(user_data['user'])
+                flash('You are successfuly logged in!', 'success')
+    else:
+        if session.get('user'):
+            return redirect(url_for('posts'))
+
+    return render_template('login.html',
+                           meta_title='Login',
+                           error=error,
+                           error_type=error_type)
 
 
 @app.route('/logout')
 def logout():
-    pass
+    error = False
+    error_type = 'validate'
+    if userClass.logout():
+        flash('You are successfuly logged out!', 'success')
+    else:
+        return redirect(url_for('login'))
+    return render_template('login.html',
+                           meta_title='Login',
+                           error=error,
+                           error_type=error_type)
 
 
 @app.route('/recent_feed')
@@ -185,5 +229,6 @@ if not app.config['DEBUG']:
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
 postClass = post.Post(app.config['DATABASE'])
+userClass = user.User(app.config['DATABASE'])
 if __name__ == '__main__':
     app.run(debug=app.config['DEBUG'])

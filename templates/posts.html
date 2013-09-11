@@ -1,0 +1,28 @@
+{%- extends 'index.html' -%}
+{%- block body -%}
+	<div class="post">
+		<div class="row">
+			{%- if posts -%}
+				<h1>Posts List</h1>
+				<div class="">
+					<table class="table table-striped">
+						<tr>
+							<th>Title</th>
+							<th>Post Date</th>
+							<th>Action</th>
+						</tr>
+						{%- for post in posts -%}
+						<tr>
+							<td>{{ post['title'] }}</td>
+							<td>{{ post['date'] |formatdate }}</td>
+							<td><a href="" class="icon-remove-sign bigger icon"></a>&nbsp;&nbsp;<a href="" class="icon-eye-open bigger icon"></a></td>
+						</tr>
+						{%- endfor -%}
+					</table>
+				</div>
+			{%- else -%}
+				<h1>Posts not found</h1>
+			{%- endif -%}
+		</div>
+	</div>
+{%- endblock -%}

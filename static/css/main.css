@@ -75,6 +75,12 @@ div.mdm-buttons ul {margin: 10px 0 10px -30px;}
 .mdm-control a {font-size: 16px !important;}
 .mdm-control a.bigger {font-size: 2em !important;}
 
+a.icon {
+	text-decoration: none;
+	cursor: pointer;
+	color: inherit;
+}
+
 @mediamax-width767px{
 	.section-preview .image img {
 		width:100%;

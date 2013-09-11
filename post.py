@@ -13,7 +13,7 @@ class Post:
         cond = {}
         if tag is not None:
             cond = {'tags': tag}
-        print skip, limit
+
         cursor = self.posts.find(cond).sort('date', direction=-1).skip(skip).limit(limit)
         l = []
 

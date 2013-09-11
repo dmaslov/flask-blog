@@ -1,6 +1,8 @@
 import config
 import pymongo
 import hashlib
+from werkzeug.security import generate_password_hash
+
 
 def create_document():
     """ Create posts document and insert test entry. """
@@ -12,7 +14,7 @@ def add_user():
     db = config.DATABASE
     users = db.users
 
-    password_hash = make_pw_hash(config.USER_PASSWORD)
+    password_hash = generate_password_hash(config.USER_PASSWORD, method='pbkdf2:sha256')
     record = {'_id': config.USER_LOGIN, 'password': password_hash, 'email': config.USER_EMAIL}
 
     try:
@@ -26,10 +28,6 @@ def add_user():
 
     return True
 
-
-def make_pw_hash(str):
-    #use Flask.ext (better password)
-    return hashlib.sha256(str).hexdigest()
 
 if __name__ == '__main__':
     create_document()
