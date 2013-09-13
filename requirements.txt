@@ -1,5 +1,3 @@
 flask=0.10.1
-flask-login==0.2.6
-flask-heroku==0.1.4
 flask-markdown
 pymongo==2.6

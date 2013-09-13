@@ -1,6 +1,5 @@
 #!/usr/local/env python
 import subprocess
-import os
 
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'

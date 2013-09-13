@@ -1,4 +1,3 @@
-import sys
 import re
 import datetime
 import cgi
@@ -42,7 +41,17 @@ class Post:
         return self.posts.find_one({'permalink': permalink})
 
     def get_post_by_id(self, post_id):
-        return self.posts.find_one({'_id': ObjectId(post_id)})
+        post = self.posts.find_one({'_id': ObjectId(post_id)})
+        if post:
+            if 'tags' not in post:
+                post['tags'] = ''
+            else:
+                post['tags'] = ','.join(post['tags'])
+            if 'preview' not in post:
+                post['preview'] = ''
+
+        return post
+
 
     def get_total_count(self, tag=None):
         if tag is not None:
@@ -58,6 +67,16 @@ class Post:
             print "Error inserting post"
 
         return post_id
+
+    def edit_post(self, post_id, post_data):
+        try:
+            self.posts.update({'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
+            return True
+        except Exception, e:
+            print e
+            return False
+
+
 
     def delete_post(self, id):
         try:

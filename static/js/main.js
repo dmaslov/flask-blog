@@ -18,4 +18,7 @@ $(function(){
     }
 
     $('a[data-target="_blank"]').attr('target', '_blank');
+    $('a.icon').on('click', function(event){
+        return confirm('Are you shure?');
+    });
 });

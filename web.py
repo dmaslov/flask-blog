@@ -1,22 +1,14 @@
-import cgi
-import re
-import string
-import random
 from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
 from mdx_strike import StrikeExtension
 from mdx_quote import QuoteExtension
-
-from urlparse import urljoin
-from flask import request
 from werkzeug.contrib.atom import AtomFeed
-
-#from flask.ext.heroku import Heroku
-#import os
 import post
 import user
 import pagination
+from helper_functions import *
+import cgi
 
 
 app = Flask(__name__)
@@ -25,7 +17,6 @@ md.register_extension(GitHubGistExtension)
 md.register_extension(StrikeExtension)
 md.register_extension(QuoteExtension)
 app.config.from_object('config')
-#heroku = Heroku(app)
 
 
 @app.route('/', defaults={'page': 1})
@@ -69,7 +60,6 @@ def new_post():
     if request.method == 'POST':
         if not request.form['post-title'] or not request.form['post-full']:
             error = True
-            #flash("Title and Full text can't be blank!", 'error')
         else:
             if not session.get('user'):
                 error = True
@@ -82,19 +72,26 @@ def new_post():
                              'preview': request.form['post-short'],
                              'body': request.form['post-full'],
                              'tags': tags_array,
-                             'author': session.user.username}
+                             'author': session['user']['username']}
 
                 post = postClass.validate_post_data(post_data)
                 if request.form['post-preview'] == '1':
                     return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
                 else:
-                    post_id = postClass.create_new_post(post_data)
-                    if not post_id:
-                        error = True
-                        error_type = 'post'
-                        flash('Inserting post error..', 'error')
+                    if request.form['post-id']:
+                        if postClass.edit_post(request.form['post-id'], post_data):
+                            flash('Post successfuly updated!', 'success')
+                        else:
+                            flash('Post update failed..', 'error')
+                        return redirect(url_for('posts'))
                     else:
-                        flash('New post successfuly created!', 'success')
+                        post_id = postClass.create_new_post(post_data)
+                        if not post_id:
+                            error = True
+                            error_type = 'post'
+                            flash('Inserting post error..', 'error')
+                        else:
+                            flash('New post successfuly created!', 'success')
 
     return render_template('new_post.html',
                            meta_title='New Post',
@@ -116,7 +113,23 @@ def posts(page):
 
 @app.route('/post_edit?id=<id>')
 def post_edit(id):
-    pass
+    if session.get('user'):
+        if id:
+            post = postClass.get_post_by_id(id)
+            if not post:
+                flash('Post not found', 'error')
+                return redirect(url_for('posts'))
+        else:
+            flash('Edit post error', 'error')
+            return redirect(url_for('posts'))
+    else:
+        flash('You need to log in', 'error')
+        return redirect(url_for('posts'))
+    return render_template('edit_post.html',
+                           meta_title='Edit Post::'+post['title'],
+                           post=post,
+                           error=False,
+                           error_type=False)
 
 
 @app.route('/post_delete?id=<id>')
@@ -195,6 +208,8 @@ def recent_feed():
 def csrf_protect():
     if request.method == "POST":
         token = session.pop('_csrf_token', None)
+        # print 'form - %s' % request.form.get('_csrf_token')
+        # print 'server - %s' % token
         if not token or token != request.form.get('_csrf_token'):
             abort(400)
 
@@ -207,39 +222,6 @@ def page_not_found(error):
 @app.template_filter('formatdate')
 def format_datetime_filter(input, format="%a, %d %b %Y"):
     return input.strftime(format)
-
-
-def url_for_other_page(page):
-    args = request.view_args.copy()
-    args['page'] = page
-    return url_for(request.endpoint, **args)
-
-
-def extract_tags(tags):
-    whitespace = re.compile('\s')
-    nowhite = whitespace.sub("", tags)
-    tags_array = nowhite.split(',')
-
-    cleaned = []
-    for tag in tags_array:
-        if tag not in cleaned and tag != "":
-            cleaned.append(tag)
-
-    return cleaned
-
-
-def random_string(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for x in range(size))
-
-
-def generate_csrf_token():
-    if '_csrf_token' not in session:
-        session['_csrf_token'] = random_string()
-    return session['_csrf_token']
-
-
-def make_external(url):
-    return urljoin(request.url_root, url)
 
 
 if not app.config['DEBUG']:
