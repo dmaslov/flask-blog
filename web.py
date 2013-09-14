@@ -1,3 +1,4 @@
+import cgi
 from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
@@ -8,7 +9,6 @@ import post
 import user
 import pagination
 from helper_functions import *
-import cgi
 
 
 app = Flask(__name__)
@@ -58,7 +58,7 @@ def new_post():
     error = False
     error_type = 'validate'
     if request.method == 'POST':
-        if not request.form['post-title'] or not request.form['post-full']:
+        if not request.form.get('post-title') or not request.form.get('post-full'):
             error = True
         else:
             if not session.get('user'):
@@ -66,19 +66,19 @@ def new_post():
                 error_type = 'login'
                 flash('You need to log in before creating new post', 'error')
             else:
-                tags = cgi.escape(request.form['post-tags'])
+                tags = cgi.escape(request.form.get('post-tags'))
                 tags_array = extract_tags(tags)
-                post_data = {'title': request.form['post-title'],
-                             'preview': request.form['post-short'],
-                             'body': request.form['post-full'],
+                post_data = {'title': request.form.get('post-title'),
+                             'preview': request.form.get('post-short'),
+                             'body': request.form.get('post-full'),
                              'tags': tags_array,
                              'author': session['user']['username']}
 
                 post = postClass.validate_post_data(post_data)
-                if request.form['post-preview'] == '1':
+                if request.form.get('post-preview') == '1':
                     return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
                 else:
-                    if request.form['post-id']:
+                    if request.form.get('post-id'):
                         if postClass.edit_post(request.form['post-id'], post_data):
                             flash('Post successfuly updated!', 'success')
                         else:
@@ -152,8 +152,8 @@ def login():
     error = False
     error_type = 'validate'
     if request.method == 'POST':
-        username = request.form['login-username']
-        password = request.form['login-password']
+        username = request.form.get('login-username')
+        password = request.form.get('login-password')
         if not username or not password:
             error = True
             flash('Username and Password fields are required', 'error')
@@ -208,8 +208,6 @@ def recent_feed():
 def csrf_protect():
     if request.method == "POST":
         token = session.pop('_csrf_token', None)
-        # print 'form - %s' % request.form.get('_csrf_token')
-        # print 'server - %s' % token
         if not token or token != request.form.get('_csrf_token'):
             abort(400)
 
