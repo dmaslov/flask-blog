@@ -36,6 +36,16 @@
 								</div>
 							</div>
 						{%- endfor -%}
+					{% else %}
+						<div class="post clearfix">
+							<div class="row">
+								<div class="col-lg-8">
+									<div class="page-header">
+										<h1>Posts not found</h1>
+									</div>
+								</div>
+							</div>
+						</div>
 					{%- endif -%}
 				{%- endblock -%}
 				{% if pagination and pagination.pages > 1 %}

@@ -25,10 +25,8 @@ def index(page):
     skip = (page - 1) * app.config['PER_PAGE']
     posts = postClass.get_posts(app.config['PER_PAGE'], skip)
     count = postClass.get_total_count()
-    if not posts:
-        abort(404)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts, pagination=pag, meta_title='Blog')
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Blog')
 
 
 @app.route('/tag/<tag>', defaults={'page': 1})
@@ -38,22 +36,25 @@ def posts_by_tag(tag, page):
     # skip = (page - 1) * app.config['PER_PAGE']
     skip = 0
     posts = postClass.get_posts(app.config['PER_PAGE'], skip, tag)
+    if posts['error']:
+        pass
     # count = postClass.get_total_count(tag)
-    if not posts:
+    if not posts['data']:
         abort(404)
     # pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts, meta_title='Posts by tag: tag')
+    return render_template('index.html', posts=posts['data'], meta_title='Posts by tag: '+tag)
 
 
 @app.route('/post/<permalink>')
 def single_post(permalink):
     post = postClass.get_post_by_permalink(permalink)
-    if not post:
+    if not post['data']:
         abort(404)
-    return render_template('single_post.html', post=post, meta_title=post['title'])
+    return render_template('single_post.html', post=post['data'], meta_title=post['data']['title'])
 
 
 @app.route('/newpost', methods=['GET', 'POST'])
+@login_required()
 def new_post():
     error = False
     error_type = 'validate'
@@ -61,37 +62,33 @@ def new_post():
         if not request.form.get('post-title') or not request.form.get('post-full'):
             error = True
         else:
-            if not session.get('user'):
-                error = True
-                error_type = 'login'
-                flash('You need to log in before creating new post', 'error')
-            else:
-                tags = cgi.escape(request.form.get('post-tags'))
-                tags_array = extract_tags(tags)
-                post_data = {'title': request.form.get('post-title'),
-                             'preview': request.form.get('post-short'),
-                             'body': request.form.get('post-full'),
-                             'tags': tags_array,
-                             'author': session['user']['username']}
+            tags = cgi.escape(request.form.get('post-tags'))
+            tags_array = extract_tags(tags)
+            post_data = {'title': request.form.get('post-title'),
+                         'preview': request.form.get('post-short'),
+                         'body': request.form.get('post-full'),
+                         'tags': tags_array,
+                         'author': session['user']['username']}
 
-                post = postClass.validate_post_data(post_data)
-                if request.form.get('post-preview') == '1':
-                    return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
-                else:
-                    if request.form.get('post-id'):
-                        if postClass.edit_post(request.form['post-id'], post_data):
-                            flash('Post successfuly updated!', 'success')
-                        else:
-                            flash('Post update failed..', 'error')
-                        return redirect(url_for('posts'))
+            post = postClass.validate_post_data(post_data)
+            if request.form.get('post-preview') == '1':
+                return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
+            else:
+                if request.form.get('post-id'):
+                    response = postClass.edit_post(request.form['post-id'], post_data)
+                    if not response['error']:
+                        flash('Post successfuly updated!', 'success')
                     else:
-                        post_id = postClass.create_new_post(post_data)
-                        if not post_id:
-                            error = True
-                            error_type = 'post'
-                            flash('Inserting post error..', 'error')
-                        else:
-                            flash('New post successfuly created!', 'success')
+                        flash(response['error'], 'error')
+                    return redirect(url_for('posts'))
+                else:
+                    response = postClass.create_new_post(post_data)
+                    if response['error']:
+                        error = True
+                        error_type = 'post'
+                        flash(response['error'], 'error')
+                    else:
+                        flash('New post successfuly created!', 'success')
 
     return render_template('new_post.html',
                            meta_title='New Post',
@@ -100,50 +97,39 @@ def new_post():
 
 
 @app.route('/posts_list', defaults={'page': 1})
+@login_required()
 def posts(page):
-    if not session.get('user'):
-        return redirect(url_for('index'))
-    else:
-        posts = postClass.get_posts(app.config['PER_PAGE'], 0)
-        if not posts:
-            abort(404)
+    posts = postClass.get_posts(app.config['PER_PAGE'], 0)
+    if not posts['data']:
+        abort(404)
 
-    return render_template('posts.html', posts=posts, meta_title='Posts List')
+    return render_template('posts.html', posts=posts['data'], meta_title='Posts List')
 
 
 @app.route('/post_edit?id=<id>')
+@login_required()
 def post_edit(id):
-    if session.get('user'):
-        if id:
-            post = postClass.get_post_by_id(id)
-            if not post:
-                flash('Post not found', 'error')
-                return redirect(url_for('posts'))
-        else:
-            flash('Edit post error', 'error')
-            return redirect(url_for('posts'))
-    else:
-        flash('You need to log in', 'error')
+    post = postClass.get_post_by_id(id)
+    if post['error']:
+        flash(post['error'], 'error')
         return redirect(url_for('posts'))
+
     return render_template('edit_post.html',
-                           meta_title='Edit Post::'+post['title'],
-                           post=post,
+                           meta_title='Edit Post::'+post['data']['title'],
+                           post=post['data'],
                            error=False,
                            error_type=False)
 
 
 @app.route('/post_delete?id=<id>')
+@login_required()
 def post_del(id):
-    if session.get('user'):
-        if id:
-            if postClass.delete_post(id):
-                flash('Post successfuly removed!', 'success')
-            else:
-                flash('Remove post error', 'error')
-        else:
-            flash('Remove post error', 'error')
+    response = postClass.delete_post(id)
+    if response['data'] is True:
+        flash('Post successfuly removed!', 'success')
     else:
-        flash('You need to log in', 'error')
+        flash(response['error'], 'error')
+
     return redirect(url_for('posts'))
 
 
@@ -164,7 +150,7 @@ def login():
                 error_type = 'login'
                 flash(user_data['error'], 'error')
             else:
-                userClass.start_session(user_data['user'])
+                userClass.start_session(user_data['data'])
                 flash('You are successfuly logged in!', 'success')
     else:
         if session.get('user'):
@@ -231,7 +217,7 @@ if not app.config['DEBUG']:
 
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
-postClass = post.Post(app.config['DATABASE'])
+postClass = post.Post(app.config['DATABASE'], app.config['DEBUG'])
 userClass = user.User(app.config['DATABASE'])
 if __name__ == '__main__':
     app.run(debug=app.config['DEBUG'])

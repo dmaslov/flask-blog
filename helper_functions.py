@@ -2,7 +2,8 @@ import re
 import string
 import random
 from urlparse import urljoin
-from flask import request, url_for, session
+from flask import request, url_for, session, flash, redirect
+from functools import wraps
 
 
 def url_for_other_page(page):
@@ -36,3 +37,15 @@ def generate_csrf_token():
 
 def make_external(url):
     return urljoin(request.url_root, url)
+
+
+def login_required():
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if not session.get('user'):
+                flash('You need to loged in', 'error')
+                return redirect(url_for('login'))
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper

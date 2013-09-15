@@ -5,88 +5,104 @@ from bson.objectid import ObjectId
 
 
 class Post:
-    def __init__(self, database):
+    def __init__(self, database, debug_mode=True):
         self.db = database
         self.posts = database.posts
+        self.response = {'error': None, 'data': None}
+        self.debug_mode = debug_mode
 
     def get_posts(self, limit, skip, tag=None):
         cond = {}
         if tag is not None:
             cond = {'tags': tag}
+        try:
+            cursor = self.posts.find(cond).sort('date', direction=-1).skip(skip).limit(limit)
+            self.response['data'] = []
+            for post in cursor:
+                if 'tags' not in post:
+                    post['tags'] = []
+                if 'comments' not in post:
+                    post['comments'] = []
+                if 'preview' not in post:
+                    post['preview'] = ''
 
-        cursor = self.posts.find(cond).sort('date', direction=-1).skip(skip).limit(limit)
-        l = []
+                self.response['data'].append({'id': post['_id'],
+                                              'title': post['title'],
+                                              'body': post['body'],
+                                              'preview': post['preview'],
+                                              'date': post['date'],
+                                              'permalink': post['permalink'],
+                                              'tags': post['tags'],
+                                              'author': post['author'],
+                                              'comments': post['comments']})
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Posts not found..'
 
-        for post in cursor:
-            if 'tags' not in post:
-                post['tags'] = []
-            if 'comments' not in post:
-                post['comments'] = []
-            if 'preview' not in post:
-                post['preview'] = ''
-
-            l.append({'id': post['_id'],
-                      'title': post['title'],
-                      'body': post['body'],
-                      'preview': post['preview'],
-                      'date': post['date'],
-                      'permalink': post['permalink'],
-                      'tags': post['tags'],
-                      'author': post['author'],
-                      'comments': post['comments']})
-
-        return l
+        return self.response
 
     def get_post_by_permalink(self, permalink):
-        return self.posts.find_one({'permalink': permalink})
+        try:
+            self.response['data'] = self.posts.find_one({'permalink': permalink})
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Post not found..'
+
+        return self.response
 
     def get_post_by_id(self, post_id):
-        post = self.posts.find_one({'_id': ObjectId(post_id)})
-        if post:
-            if 'tags' not in post:
-                post['tags'] = ''
-            else:
-                post['tags'] = ','.join(post['tags'])
-            if 'preview' not in post:
-                post['preview'] = ''
+        try:
+            self.response['data'] = self.posts.find_one({'_id': ObjectId(post_id)})
+            if self.response['data']:
+                if 'tags' not in self.response['data']:
+                    self.response['data']['tags'] = ''
+                else:
+                    self.response['data']['tags'] = ','.join(self.response['data']['tags'])
+                if 'preview' not in self.response['data']:
+                    self.response['data']['preview'] = ''
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Post not found..'
 
-        return post
-
+        return self.response
 
     def get_total_count(self, tag=None):
+        cond = {}
         if tag is not None:
-            return self.posts.find({'tags': tag}).count()
-        else:
-            return self.posts.count()
+            cond = {'tags': tag}
+
+        return self.posts.find(cond).count()
 
     def create_new_post(self, post_data):
         try:
-            post_id = self.posts.insert(post_data)
-        except:
-            #TODO: proper exception handling
-            print "Error inserting post"
+            self.response['data'] = self.posts.insert(post_data)
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Inserting post error..'
 
-        return post_id
+        return self.response
 
     def edit_post(self, post_id, post_data):
         try:
             self.posts.update({'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
-            return True
+            self.response['data'] = True
         except Exception, e:
-            print e
-            return False
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Post update failed..'
 
-
+        return self.response
 
     def delete_post(self, id):
         try:
             if self.get_post_by_id(id) and self.posts.remove({'_id': ObjectId(id)}):
-                return True
+                self.response['data'] = True
             else:
-                return False
-        except:
-            print "Error removing post"
+                self.response['data'] = False
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Remove post error..'
 
+        return self.response
 
     def validate_post_data(self, post_data):
         exp = re.compile('\W')
@@ -101,3 +117,21 @@ class Post:
         post_data['permalink'] = permalink
 
         return post_data
+
+    def print_debug_info(self, msg, show=False):
+        if show:
+            import sys
+            import os
+
+            ERROR_COLOR = '\033[32m'
+            ERROR_END = '\033[0m'
+
+            error = {'type': sys.exc_info()[0].__name__,
+                     'file': os.path.basename(sys.exc_info()[2].tb_frame.f_code.co_filename),
+                     'line': sys.exc_info()[2].tb_lineno,
+                     'details': str(msg)}
+
+            print ERROR_COLOR
+            print '\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
+                  % (error['type'], error['file'], error['line'], error['details'])
+            print ERROR_END
