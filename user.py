@@ -13,6 +13,7 @@ class User:
         self.debug_mode = debug_mode
 
     def login(self, username, password):
+        self.response['error'] = None
         try:
             admin = self.users.find_one({'_id': username})
             if admin:
@@ -23,6 +24,7 @@ class User:
                     self.response['error'] = 'Password don\'t match'
             else:
                 self.response['error'] = 'User not found'
+
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'System error'

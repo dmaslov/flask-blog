@@ -12,6 +12,7 @@ class Post:
         self.debug_mode = debug_mode
 
     def get_posts(self, limit, skip, tag=None):
+        self.response['error'] = None
         cond = {}
         if tag is not None:
             cond = {'tags': tag}
@@ -42,6 +43,7 @@ class Post:
         return self.response
 
     def get_post_by_permalink(self, permalink):
+        self.response['error'] = None
         try:
             self.response['data'] = self.posts.find_one({'permalink': permalink})
         except Exception, e:
@@ -51,6 +53,7 @@ class Post:
         return self.response
 
     def get_post_by_id(self, post_id):
+        self.response['error'] = None
         try:
             self.response['data'] = self.posts.find_one({'_id': ObjectId(post_id)})
             if self.response['data']:
@@ -74,6 +77,7 @@ class Post:
         return self.posts.find(cond).count()
 
     def create_new_post(self, post_data):
+        self.response['error'] = None
         try:
             self.response['data'] = self.posts.insert(post_data)
         except Exception, e:
@@ -83,6 +87,7 @@ class Post:
         return self.response
 
     def edit_post(self, post_id, post_data):
+        self.response['error'] = None
         try:
             self.posts.update({'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
             self.response['data'] = True
@@ -93,6 +98,7 @@ class Post:
         return self.response
 
     def delete_post(self, id):
+        self.response['error'] = None
         try:
             if self.get_post_by_id(id) and self.posts.remove({'_id': ObjectId(id)}):
                 self.response['data'] = True

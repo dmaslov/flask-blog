@@ -152,6 +152,7 @@ def login():
             else:
                 userClass.start_session(user_data['data'])
                 flash('You are successfuly logged in!', 'success')
+                return redirect(url_for('posts'))
     else:
         if session.get('user'):
             return redirect(url_for('posts'))
@@ -164,16 +165,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    error = False
-    error_type = 'validate'
     if userClass.logout():
         flash('You are successfuly logged out!', 'success')
-    else:
-        return redirect(url_for('login'))
-    return render_template('login.html',
-                           meta_title='Login',
-                           error=error,
-                           error_type=error_type)
+    return redirect(url_for('login'))
 
 
 @app.route('/recent_feed')
@@ -181,7 +175,7 @@ def recent_feed():
     feed = AtomFeed('Recent Articles',
                     feed_url=request.url, url=request.url_root)
     posts = postClass.get_posts(app.config['PER_PAGE'], 0)
-    for post in posts:
+    for post in posts['data']:
         feed.add(post['title'], md(post['body']),
                  content_type='html',
                  author=post['author'],
