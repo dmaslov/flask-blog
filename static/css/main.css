@@ -80,7 +80,7 @@ a.icon {
 	cursor: pointer;
 	color: inherit;
 }
-
+legend {border:none;}
 @mediamax-width767px{
 	.section-preview .image img {
 		width:100%;

@@ -97,10 +97,10 @@ class Post:
 
         return self.response
 
-    def delete_post(self, id):
+    def delete_post(self, post_id):
         self.response['error'] = None
         try:
-            if self.get_post_by_id(id) and self.posts.remove({'_id': ObjectId(id)}):
+            if self.get_post_by_id(post_id) and self.posts.remove({'_id': ObjectId(post_id)}):
                 self.response['data'] = True
             else:
                 self.response['data'] = False
@@ -110,7 +110,8 @@ class Post:
 
         return self.response
 
-    def validate_post_data(self, post_data):
+    @staticmethod
+    def validate_post_data(post_data):
         exp = re.compile('\W')
         whitespace = re.compile('\s')
         temp_title = whitespace.sub("_", post_data['title'])
@@ -124,7 +125,8 @@ class Post:
 
         return post_data
 
-    def print_debug_info(self, msg, show=False):
+    @staticmethod
+    def print_debug_info(msg, show=False):
         if show:
             import sys
             import os

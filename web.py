@@ -100,6 +100,7 @@ def new_post():
 
 
 @app.route('/post_preview')
+@login_required()
 def post_preview():
     post = session.get('post-preview')
     return render_template('preview.html', post=post, meta_title='Preview Post::'+post['title'])
@@ -183,6 +184,45 @@ def logout():
     if userClass.logout():
         flash('You are successfuly logged out!', 'success')
     return redirect(url_for('login'))
+
+
+@app.route('/users')
+@login_required()
+def users_list():
+    users = userClass.get_users()
+    return render_template('users.html', users=users['data'], meta_title='Users List')
+
+
+@app.route('/add_user')
+@login_required()
+def add_user():
+    gravatar_url = userClass.get_gravatar_link()
+    return render_template('add_user.html', gravatar_url=gravatar_url, meta_title='Add User')
+
+
+@app.route('/edit_user?id=<id>')
+@login_required()
+def edit_user(id):
+    user = userClass.get_user(id)
+    return render_template('edit_user.html', user=user['data'], meta_title='Edit User')
+
+
+@app.route('/delete_user?id=<id>')
+@login_required()
+def delete_user(id):
+    if id != session['user']['username']:
+        user = userClass.delete_user(id)
+        if user['error']:
+            flash(user['error'])
+        else:
+            flash('User successful deleted')
+    return redirect(url_for('users_list'))
+
+
+@app.route('/save_user', methods=['POST'])
+@login_required()
+def save_user():
+    return True
 
 
 @app.route('/recent_feed')

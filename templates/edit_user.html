@@ -1,0 +1,71 @@
+{%- extends 'index.html' -%}
+{%- block body -%}
+	<div class="post clearfix">
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="page-header">
+					<h1>Edit User</h1>
+				</div>
+				<div class="content">
+					{%- with messages = get_flashed_messages(with_categories=True) -%}
+						{%- if messages -%}
+							{%- for category, message in messages -%}
+								<div class="response">
+									<span class="message {{ category }}">{%- if category == 'success' -%}✔{%- endif -%}&nbsp;{{ message }}</span>
+								</div>
+							{%- endfor -%}
+						{%- endif -%}
+					{%- endwith -%}
+					{%- if user -%}
+						<form role="form" method="post" action="{{ url_for('save_user') }}">
+							<div class="col-lg-2">
+								<img src="{{ user['gravatar_url'] }}" class="img-circle">
+							</div>
+							<div class="col-lg-10">
+								<fieldset>
+								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+									{%- if error and error_type == 'validate' -%}
+										<label class="control-label" for="user-username">Required Field</label>
+									{%- endif -%}
+								    <input type="text" class="form-control" name="user-username" id="user-username" placeholder="Username" value="{{ user['_id'] }}" required autocomplete="off">
+								</div>
+								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+									{%- if error and error_type == 'validate' -%}
+										<label class="control-label" for="user-email">Required Field</label>
+									{%- endif -%}
+								    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="{{ user['email'] }}" required autocomplete="off">
+								</div>
+							</fieldset>
+							<fieldset>
+							<legend>Password section</legend>
+								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+									{%- if error and error_type == 'validate' -%}
+										<label class="control-label" for="user-old-password">Required Field</label>
+									{%- endif -%}
+								    <input type="password" class="form-control" name="user-old-password" id="user-old-password" placeholder="Current Password" value="" required autocomplete="off">
+								</div>
+								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+									{%- if error and error_type == 'validate' -%}
+										<label class="control-label" for="user-new-password">Required Field</label>
+									{%- endif -%}
+								    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="New Password" value="" required autocomplete="off">
+								</div>
+								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+									{%- if error and error_type == 'validate' -%}
+										<label class="control-label" for="user-new-password-again">Required Field</label>
+									{%- endif -%}
+								    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="New Password Repeat" value="" required autocomplete="off">
+								</div>
+							</fieldset>
+							<div class="form-group">
+								<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+							    <input id="post-submit" type="submit" class="btn btn-primary" value="Submit">
+						    </div>
+							</div>
+						</form>
+					{%- endif -%}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endblock -%}

@@ -1,3 +1,4 @@
+import urllib, hashlib
 from werkzeug.security import check_password_hash
 from flask import session
 
@@ -32,7 +33,8 @@ class User:
         self.response['data'] = {'username': self.username, 'email': self.email}
         return self.response
 
-    def validate_login(self, password_hash, password):
+    @staticmethod
+    def validate_login(password_hash, password):
         return check_password_hash(password_hash, password)
 
     def start_session(self, obj):
@@ -45,7 +47,50 @@ class User:
         else:
             return False
 
-    def print_debug_info(self, msg, show=False):
+    def get_users(self):
+        self.response['error'] = None
+        try:
+            users = self.users.find().sort('date', direction=-1)
+            self.response['data'] = []
+            for user in users:
+                self.response['data'].append({'id': user['_id'],
+                                              'email': user['email'],
+                                              'date': user['date']})
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Users not found..'
+        return self.response
+
+    def get_user(self, user_id):
+        self.response['error'] = None
+        try:
+            user = self.users.find_one({'_id': user_id})
+            gravatar_url = self.get_gravatar_link(user['email'])
+            self.response['data'] = user
+            self.response['data']['gravatar_url'] = gravatar_url
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'User not found..'
+        return self.response
+
+    @staticmethod
+    def get_gravatar_link(email=''):
+        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'d': 'retro'})
+        return gravatar_url
+
+    def delete_user(self, user_id):
+        self.response['error'] = None
+        try:
+            self.users.remove({'_id': user_id})
+            self.response['data'] = True
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Delete user error..'
+        return self.response
+
+    @staticmethod
+    def print_debug_info(msg, show=False):
         if show:
             import sys
             import os
