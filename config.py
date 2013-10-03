@@ -1,7 +1,7 @@
 import pymongo
 
 DEBUG = True
-PER_PAGE = 10
+PER_PAGE = 15
 
 SECRET_KEY = "Howdy, cowboy!"
 #Database

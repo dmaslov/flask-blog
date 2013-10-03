@@ -20,7 +20,7 @@ app.config.from_object('config')
 
 
 @app.route('/', defaults={'page': 1})
-@app.route('/page/<int:page>')
+@app.route('/page-<int:page>')
 def index(page):
     skip = (page - 1) * app.config['PER_PAGE']
     posts = postClass.get_posts(app.config['PER_PAGE'], skip)
@@ -30,19 +30,15 @@ def index(page):
 
 
 @app.route('/tag/<tag>', defaults={'page': 1})
-#@app.route('/t_page/<int:page>/<tag>')
+@app.route('/tag/<tag>/page-<int:page>')
 def posts_by_tag(tag, page):
-    # TODO: pagination for by_tag_view
-    # skip = (page - 1) * app.config['PER_PAGE']
-    skip = 0
+    skip = (page - 1) * app.config['PER_PAGE']
     posts = postClass.get_posts(app.config['PER_PAGE'], skip, tag)
-    if posts['error']:
-        pass
-    # count = postClass.get_total_count(tag)
+    count = postClass.get_total_count(tag)
     if not posts['data']:
         abort(404)
-    # pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], meta_title='Posts by tag: '+tag)
+    pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: '+tag)
 
 
 @app.route('/post/<permalink>')
@@ -72,17 +68,24 @@ def new_post():
 
             post = postClass.validate_post_data(post_data)
             if request.form.get('post-preview') == '1':
-                return render_template('preview.html', post=post, meta_title='Preview Post::'+post_data['title'])
-            else:
+                session['post-preview'] = post
                 if request.form.get('post-id'):
-                    response = postClass.edit_post(request.form['post-id'], post_data)
+                    session['post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
+                else:
+                    session['post-preview']['redirect'] = url_for('new_post')
+                return redirect(url_for('post_preview'))
+            else:
+                session.pop('post-preview', None)
+
+                if request.form.get('post-id'):
+                    response = postClass.edit_post(request.form['post-id'], post)
                     if not response['error']:
                         flash('Post successfuly updated!', 'success')
                     else:
                         flash(response['error'], 'error')
                     return redirect(url_for('posts'))
                 else:
-                    response = postClass.create_new_post(post_data)
+                    response = postClass.create_new_post(post)
                     if response['error']:
                         error = True
                         error_type = 'post'
@@ -96,14 +99,26 @@ def new_post():
                            error_type=error_type)
 
 
+@app.route('/post_preview')
+def post_preview():
+    post = session.get('post-preview')
+    return render_template('preview.html', post=post, meta_title='Preview Post::'+post['title'])
+
+
 @app.route('/posts_list', defaults={'page': 1})
+@app.route('/posts_list/page-<int:page>')
 @login_required()
 def posts(page):
-    posts = postClass.get_posts(app.config['PER_PAGE'], 0)
+    session.pop('post-preview', None)
+    skip = (page - 1) * app.config['PER_PAGE']
+    posts = postClass.get_posts(app.config['PER_PAGE'], skip)
+    count = postClass.get_total_count()
+    pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
+
     if not posts['data']:
         abort(404)
 
-    return render_template('posts.html', posts=posts['data'], meta_title='Posts List')
+    return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Posts List')
 
 
 @app.route('/post_edit?id=<id>')
@@ -193,13 +208,13 @@ def csrf_protect():
 
 
 @app.errorhandler(404)
-def page_not_found(error):
+def page_not_found():
     return render_template('404.html', meta_title='404'), 404
 
 
 @app.template_filter('formatdate')
-def format_datetime_filter(input, format="%a, %d %b %Y"):
-    return input.strftime(format)
+def format_datetime_filter(input_value, format_="%a, %d %b %Y"):
+    return input_value.strftime(format_)
 
 
 if not app.config['DEBUG']:

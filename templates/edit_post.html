@@ -1,5 +1,19 @@
 {%- extends 'index.html' -%}
 {%- block body -%}
+	{% if session.get('post-preview', None) %}
+		{% set post_title = session['post-preview'].get('title', None) %}
+		{% set post_preview = session['post-preview'].get('preview', None) %}
+		{% set post_body = session['post-preview'].get('body', None) %}
+		{% set tags = session['post-preview'].get('tags', None) %}
+		{% if tags %}
+			{% set post_tags = ','.join(tags) %}
+		{% endif %}
+	{% else %}
+		{% set post_title = post.get('title') %}
+		{% set post_preview = post.get('preview') %}
+		{% set post_body = post.get('body') %}
+		{% set post_tags = post.get('tags') %}
+	{% endif %}
 	<div class="post clearfix">
 		<div class="row">
 			<div class="col-lg-8">
@@ -21,20 +35,20 @@
 							{%- if error and error_type == 'validate' -%}
 								<label class="control-label" for="post-title">Required Field</label>
 							{%- endif -%}
-						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="Post Title" required value="{{ post['title'] }}">
+						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="Post Title" required value="{{ post_title }}">
 					    </div>
 						<div class="form-group">
-						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Shost Text">{{ post['preview'] }}</textarea>
+						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Shost Text">{{ post_preview }}</textarea>
 					    </div>
 						<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
 							{%- if error and error_type == 'validate' -%}
 								<label class="control-label" for="post-full">Required Field</label>
 							{%- endif -%}
-						    <textarea id="post-full" name="post-full" class="form-control" rows="6" placeholder="Full Text" required>{{ post['body'] }}</textarea>
+						    <textarea id="post-full" name="post-full" class="form-control" rows="6" placeholder="Full Text" required>{{ post_body }}</textarea>
 					    </div>
 						<div class="form-group">
 						    <label for="post-tags">Tags</label>
-						    <input type="text" name="post-tags" class="form-control" id="post-tags" placeholder="Comma separated" value="{{ post['tags'] }}">
+						    <input type="text" name="post-tags" class="form-control" id="post-tags" placeholder="Comma separated" value="{{ post_tags }}">
 					    </div>
 						<div class="form-group">
 							<input type="hidden" name="post-preview" id="preview">

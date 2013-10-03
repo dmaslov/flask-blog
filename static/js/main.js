@@ -8,17 +8,13 @@ $(function(){
         var postForm = $('#post-form');
         postForm.find('#preview').val('');
     });
-    $('#preview-goback').on('click', function(event){
-        event.preventDefault();
-        window.history.back(1);
-    });
     if($('#post-short').length && $('#post-full').length) {
         $('#post-short').mdmagick();
         $('#post-full').mdmagick();
     }
 
     $('a[data-target="_blank"]').attr('target', '_blank');
-    $('a.icon').on('click', function(event){
+    $('a.icon').on('click', function(){
         return confirm('Are you shure?');
     });
 });
