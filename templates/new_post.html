@@ -29,7 +29,7 @@
 						{%- endif -%}
 					{%- endwith -%}
 					<form id="post-form" role="form" method="post" action="{{ url_for('new_post') }}">
-						<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+						<div class="form-group {% if error and error_type == 'validate' %} has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
 								<label class="control-label" for="post-title">Required Field</label>
 							{%- endif -%}
@@ -38,7 +38,7 @@
 						<div class="form-group">
 						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Shost Text">{{ post_preview }}</textarea>
 					    </div>
-						<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+						<div class="form-group {% if error and error_type == 'validate' %} has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
 								<label class="control-label" for="post-full">Required Field</label>
 							{%- endif -%}

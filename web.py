@@ -158,7 +158,7 @@ def login():
         password = request.form.get('login-password')
         if not username or not password:
             error = True
-            flash('Username and Password fields are required', 'error')
+            #flash('Username and Password fields are required', 'error')
         else:
             user_data = userClass.login(username, password)
             if user_data['error']:
@@ -213,16 +213,41 @@ def delete_user(id):
     if id != session['user']['username']:
         user = userClass.delete_user(id)
         if user['error']:
-            flash(user['error'])
+            flash(user['error'], 'error')
         else:
-            flash('User successful deleted')
+            flash('User successful deleted', 'success')
     return redirect(url_for('users_list'))
 
 
 @app.route('/save_user', methods=['POST'])
 @login_required()
 def save_user():
-    return True
+    post_data = {
+        '_id': request.form.get('user-id', None),
+        'email': request.form.get('user-email', None),
+        'old_pass': request.form.get('user-old-password', None),
+        'new_pass': request.form.get('user-new-password', None),
+        'new_pass_again': request.form.get('user-new-password-again', None),
+        'update': request.form.get('user-update', False)
+    }
+    if not post_data['email'] or not post_data['_id']:
+        flash('Username and Email required', 'error')
+        if post_data['update']:
+                return redirect(url_for('edit_user', id=post_data['_id']))
+        else:
+            return redirect(url_for('add_user'))
+    else:
+        user = userClass.save_user(post_data)
+        if user['error']:
+            flash(user['error'], 'error')
+            if post_data['update']:
+                return redirect(url_for('edit_user', id=post_data['_id']))
+            else:
+                return redirect(url_for('add_user'))
+        else:
+            message = 'User update successful!' if post_data['update'] else 'Add user successful!'
+            flash(message, 'success')
+    return redirect(url_for('edit_user', id=post_data['_id']))
 
 
 @app.route('/recent_feed')
@@ -248,7 +273,7 @@ def csrf_protect():
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(error):
     return render_template('404.html', meta_title='404'), 404
 
 
@@ -266,7 +291,7 @@ if not app.config['DEBUG']:
 
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
-postClass = post.Post(app.config['DATABASE'], app.config['DEBUG'])
-userClass = user.User(app.config['DATABASE'])
+postClass = post.Post(app.config)
+userClass = user.User(app.config)
 if __name__ == '__main__':
     app.run(debug=app.config['DEBUG'])
