@@ -8,7 +8,6 @@ from flask import session
 
 class User:
     def __init__(self, default_config):
-        self.db = default_config['DATABASE']
         self.collection = default_config['USERS_COLLECTION']
         self.username = None
         self.email = None

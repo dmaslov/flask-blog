@@ -6,7 +6,6 @@ from bson.objectid import ObjectId
 
 class Post:
     def __init__(self, default_config):
-        self.db = default_config['DATABASE']
         self.collection = default_config['POSTS_COLLECTION']
         self.response = {'error': None, 'data': None}
         self.debug_mode = default_config['DEBUG']

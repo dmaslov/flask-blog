@@ -1,21 +1,15 @@
 import pymongo
 
-DEBUG = True
-PER_PAGE = 15
-
-SECRET_KEY = "Howdy, cowboy!"
-#Database
-CONNECTION_STRING = "mongodb://localhost"
+CONNECTION_STRING = "mongodb://localhost"  # replace it with your settings
 CONNECTION = pymongo.MongoClient(CONNECTION_STRING)
+
+'''Leave this as is if you dont have other configuration'''
 DATABASE = CONNECTION.blog
 POSTS_COLLECTION = DATABASE.posts
 USERS_COLLECTION = DATABASE.users
 SETTINGS_COLLECTION = DATABASE.settings
 
-#user
-USER_EMAIL = 'user@example.com'
-USER_LOGIN = 'user'
-USER_PASSWORD = '111111'
+SECRET_KEY = "Howdy, cowboy!"  # need to replace with some sequence..
+LOG_FILE = "app.log"
 
-#Logging
-LOG_FILE="app.log"
+DEBUG = True  # set it to False on production

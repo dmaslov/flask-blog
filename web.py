@@ -8,6 +8,7 @@ from werkzeug.contrib.atom import AtomFeed
 import post
 import user
 import pagination
+import settings
 from helper_functions import *
 
 
@@ -268,12 +269,24 @@ def recent_feed():
     return feed.get_response()
 
 
+@app.route('/install')
+def install():
+    return render_template('install.html', meta_title='Install')
+
+
 @app.before_request
 def csrf_protect():
     if request.method == "POST":
         token = session.pop('_csrf_token', None)
         if not token or token != request.form.get('_csrf_token'):
             abort(400)
+
+
+#@app.before_request
+#def is_installed():
+#    if url_for('static', filename='') not in request.path and request.path != url_for('install'):
+#        if not settingsClass.is_installed():
+#            return redirect(url_for('install'))
 
 
 @app.errorhandler(404)
@@ -286,6 +299,13 @@ def format_datetime_filter(input_value, format_="%a, %d %b %Y"):
     return input_value.strftime(format_)
 
 
+app.jinja_env.globals['url_for_other_page'] = url_for_other_page
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
+settingsClass = settings.Settings(app.config)
+app.config = settingsClass.get_config()
+postClass = post.Post(app.config)
+userClass = user.User(app.config)
+
 if not app.config['DEBUG']:
     import logging
     from logging import FileHandler
@@ -293,9 +313,5 @@ if not app.config['DEBUG']:
     file_handler.setLevel(logging.WARNING)
     app.logger.addHandler(file_handler)
 
-app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-app.jinja_env.globals['csrf_token'] = generate_csrf_token
-postClass = post.Post(app.config)
-userClass = user.User(app.config)
 if __name__ == '__main__':
     app.run(debug=app.config['DEBUG'])
