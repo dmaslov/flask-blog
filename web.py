@@ -69,6 +69,7 @@ def new_post():
             post = postClass.validate_post_data(post_data)
             if request.form.get('post-preview') == '1':
                 session['post-preview'] = post
+                session['post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
                 if request.form.get('post-id'):
                     session['post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
                 else:
@@ -92,7 +93,9 @@ def new_post():
                         flash(response['error'], 'error')
                     else:
                         flash('New post successfuly created!', 'success')
-
+    else:
+        if session.get('post-preview') and session['post-preview']['action'] == 'edit':
+            session.pop('post-preview', None)
     return render_template('new_post.html',
                            meta_title='New Post',
                            error=error,
@@ -130,6 +133,8 @@ def post_edit(id):
         flash(post['error'], 'error')
         return redirect(url_for('posts'))
 
+    if session.get('post-preview') and session['post-preview']['action'] == 'add':
+        session.pop('post-preview', None)
     return render_template('edit_post.html',
                            meta_title='Edit Post::'+post['data']['title'],
                            post=post['data'],
@@ -158,7 +163,6 @@ def login():
         password = request.form.get('login-password')
         if not username or not password:
             error = True
-            #flash('Username and Password fields are required', 'error')
         else:
             user_data = userClass.login(username, password)
             if user_data['error']:
