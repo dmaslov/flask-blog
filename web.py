@@ -146,11 +146,14 @@ def post_edit(id):
 @app.route('/post_delete?id=<id>')
 @login_required()
 def post_del(id):
-    response = postClass.delete_post(id)
-    if response['data'] is True:
-        flash('Post successfuly removed!', 'success')
+    if postClass.get_total_count() > 1:
+        response = postClass.delete_post(id)
+        if response['data'] is True:
+            flash('Post successfuly removed!', 'success')
+        else:
+            flash(response['error'], 'error')
     else:
-        flash(response['error'], 'error')
+        flash('Need to be at least one post', 'error')
 
     return redirect(url_for('posts'))
 
@@ -269,9 +272,50 @@ def recent_feed():
     return feed.get_response()
 
 
-@app.route('/install')
+@app.route('/install', methods=['GET', 'POST'])
 def install():
-    return render_template('install.html', meta_title='Install')
+    error = False
+    error_type = 'validate'
+    if request.method == 'POST':
+        user_error = False
+        blog_error = False
+
+        user_data = {
+            '_id': request.form.get('user-id', None),
+            'email': request.form.get('user-email', None),
+            'new_pass': request.form.get('user-new-password', None),
+            'new_pass_again': request.form.get('user-new-password-again', None),
+            'update': False
+        }
+        blog_data = {
+            'title': request.form.get('blog-title', None),
+            'per_page': request.form.get('blog-perpage', None),
+            'use_search': request.form.get('blog-search', None)
+        }
+        blog_data['use_search'] = 1 if blog_data['use_search'] else 0
+
+        for key, value in user_data.items():
+            if not value and key != 'update':
+                user_error = True
+                break
+        for key, value in blog_data.items():
+            if not value and key != 'use_search':
+                blog_error = True
+                break
+
+        if user_error or blog_error:
+            error = True
+        else:
+            install_result = settingsClass.install(blog_data, user_data)
+    else:
+        if settingsClass.is_installed():
+            return redirect(url_for('index'))
+
+    return render_template('install.html',
+                           default_settings=app.config,
+                           error=error,
+                           error_type=error_type,
+                           meta_title='Install')
 
 
 @app.before_request
@@ -282,11 +326,11 @@ def csrf_protect():
             abort(400)
 
 
-#@app.before_request
-#def is_installed():
-#    if url_for('static', filename='') not in request.path and request.path != url_for('install'):
-#        if not settingsClass.is_installed():
-#            return redirect(url_for('install'))
+@app.before_request
+def is_installed():
+    if url_for('static', filename='') not in request.path and request.path != url_for('install'):
+        if not settingsClass.is_installed():
+            return redirect(url_for('install'))
 
 
 @app.errorhandler(404)

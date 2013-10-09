@@ -23,46 +23,46 @@
 							</div>
 							<div class="col-lg-10">
 								<fieldset>
-								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
-									{%- if error and error_type == 'validate' -%}
-										<label class="control-label" for="user-username">Required Field</label>
-									{%- endif -%}
-								    <input type="text" class="form-control" name="user-username" id="user-username" placeholder="Username" value="{{ user['_id'] }}" required autocomplete="off" disabled>
-								</div>
-								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
-									{%- if error and error_type == 'validate' -%}
-										<label class="control-label" for="user-email">Required Field</label>
-									{%- endif -%}
-								    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="{{ user['email'] }}" required autocomplete="off">
-								</div>
-							</fieldset>
-							<fieldset>
-							<legend>Password section</legend>
-								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
-									{%- if error and error_type == 'validate' -%}
-										<label class="control-label" for="user-old-password">Required Field</label>
-									{%- endif -%}
-								    <input type="password" class="form-control" name="user-old-password" id="user-old-password" placeholder="Current Password" autocomplete="off">
-								</div>
-								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
-									{%- if error and error_type == 'validate' -%}
-										<label class="control-label" for="user-new-password">Required Field</label>
-									{%- endif -%}
-								    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="New Password" autocomplete="off">
-								</div>
-								<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
-									{%- if error and error_type == 'validate' -%}
-										<label class="control-label" for="user-new-password-again">Required Field</label>
-									{%- endif -%}
-								    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="New Password Repeat" autocomplete="off">
-								</div>
-							</fieldset>
-							<div class="form-group">
-								<input name="user-id" type="hidden" value="{{ user['_id'] }}">
-								<input name="user-update" type="hidden" value="1">
-								<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-							    <input id="post-submit" type="submit" class="btn btn-primary" value="Submit">
-						    </div>
+									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+										{%- if error and error_type == 'validate' -%}
+											<label class="control-label" for="user-username">Required Field</label>
+										{%- endif -%}
+									    <input type="text" class="form-control" name="user-username" id="user-username" placeholder="Username" value="{{ user['_id'] }}" required autocomplete="off" disabled>
+									</div>
+									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+										{%- if error and error_type == 'validate' -%}
+											<label class="control-label" for="user-email">Required Field</label>
+										{%- endif -%}
+									    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="{{ user['email'] }}" required autocomplete="off">
+									</div>
+								</fieldset>
+								<fieldset>
+								<legend>Password section</legend>
+									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+										{%- if error and error_type == 'validate' -%}
+											<label class="control-label" for="user-old-password">Required Field</label>
+										{%- endif -%}
+									    <input type="password" class="form-control" name="user-old-password" id="user-old-password" placeholder="Current Password" autocomplete="off">
+									</div>
+									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+										{%- if error and error_type == 'validate' -%}
+											<label class="control-label" for="user-new-password">Required Field</label>
+										{%- endif -%}
+									    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="New Password" autocomplete="off">
+									</div>
+									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
+										{%- if error and error_type == 'validate' -%}
+											<label class="control-label" for="user-new-password-again">Required Field</label>
+										{%- endif -%}
+									    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="New Password Repeat" autocomplete="off">
+									</div>
+								</fieldset>
+								<div class="form-group">
+									<input name="user-id" type="hidden" value="{{ user['_id'] }}">
+									<input name="user-update" type="hidden" value="1">
+									<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+								    <input id="post-submit" type="submit" class="btn btn-primary" value="Submit">
+							    </div>
 							</div>
 						</form>
 					{%- endif -%}

@@ -22,13 +22,13 @@
 						</div>
 						<div class="col-lg-10">
 							<fieldset>
-							<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
 									<label class="control-label" for="user-id">Required Field</label>
 								{%- endif -%}
 							    <input type="text" class="form-control" name="user-id" id="user-id" placeholder="Username" value="" required autocomplete="off">
 							</div>
-							<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
 									<label class="control-label" for="user-email">Required Field</label>
 								{%- endif -%}
@@ -37,13 +37,13 @@
 						</fieldset>
 						<fieldset>
 						<legend>Password section</legend>
-							<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
 									<label class="control-label" for="user-new-password">Required Field</label>
 								{%- endif -%}
 							    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="Password" value="" required autocomplete="off">
 							</div>
-							<div class="form-group {%- if error and error_type == 'validate' -%}has-error{%- endif -%}">
+							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
 									<label class="control-label" for="user-new-password-again">Required Field</label>
 								{%- endif -%}

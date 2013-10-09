@@ -13,8 +13,8 @@ class Settings:
         try:
             cursor = self.collection.find_one()
             if cursor:
-                self.config['PER_PAGE'] = cursor.get('per_page', 15)
-                self.config['SEARCH'] = cursor.get('use_search', False)
+                self.config['PER_PAGE'] = cursor.get('per_page', self.config['PER_PAGE'])
+                self.config['SEARCH'] = cursor.get('use_search', self.config['SEARCH'])
             return self.config
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
@@ -28,6 +28,37 @@ class Settings:
             return True
         else:
             return False
+
+    def install(self, blog_data, user_data):
+        import user
+        import post
+
+        userClass = user.User(self.config)
+        postClass = post.Post(self.config)
+        self.response['error'] = None
+        try:
+            self.config['POSTS_COLLECTION'].ensure_index([('date', -1)])
+            self.config['POSTS_COLLECTION'].ensure_index([('tags', 1), ('date', -1)])
+            self.config['POSTS_COLLECTION'].ensure_index([('permalink', 1)])
+            self.config['POSTS_COLLECTION'].ensure_index([('query', 1), ('orderby', 1)])
+            self.config['USERS_COLLECTION'].ensure_index([('date', 1)])
+            self.collection.insert(blog_data)
+            user_create = userClass.save_user(user_data)
+
+            post_data = {'title': 'Hello World!',
+                         'preview': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod',
+                         'body': 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
+                         'tags': [],
+                         'author': user_data['_id']}
+
+            post = postClass.validate_post_data(post_data)
+            post_create = postClass.create_new_post(post)
+            
+            #if user_create['error'] or post_create['error']:
+            #    self.response['error']
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Posts not found..'
 
     @staticmethod
     def print_debug_info(msg, show=False):
