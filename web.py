@@ -23,18 +23,18 @@ app.config.from_object('config')
 @app.route('/', defaults={'page': 1})
 @app.route('/page-<int:page>')
 def index(page):
-    skip = (page - 1) * app.config['PER_PAGE']
-    posts = postClass.get_posts(app.config['PER_PAGE'], skip)
+    skip = (page - 1) * int(app.config['PER_PAGE'])
+    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
     count = postClass.get_total_count()
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Blog')
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
 
 
 @app.route('/tag/<tag>', defaults={'page': 1})
 @app.route('/tag/<tag>/page-<int:page>')
 def posts_by_tag(tag, page):
-    skip = (page - 1) * app.config['PER_PAGE']
-    posts = postClass.get_posts(app.config['PER_PAGE'], skip, tag)
+    skip = (page - 1) * int(app.config['PER_PAGE'])
+    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, tag)
     count = postClass.get_total_count(tag)
     if not posts['data']:
         abort(404)
@@ -115,8 +115,8 @@ def post_preview():
 @login_required()
 def posts(page):
     session.pop('post-preview', None)
-    skip = (page - 1) * app.config['PER_PAGE']
-    posts = postClass.get_posts(app.config['PER_PAGE'], skip)
+    skip = (page - 1) * int(app.config['PER_PAGE'])
+    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
     count = postClass.get_total_count()
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
 
@@ -274,6 +274,9 @@ def recent_feed():
 
 @app.route('/install', methods=['GET', 'POST'])
 def install():
+    if session.get('installed', None):
+        return redirect(url_for('index'))
+
     error = False
     error_type = 'validate'
     if request.method == 'POST':
@@ -307,6 +310,20 @@ def install():
             error = True
         else:
             install_result = settingsClass.install(blog_data, user_data)
+            if install_result['error']:
+                for i in install_result['error']:
+                    if i is not None:
+                        flash(i, 'error')
+            else:
+                session['installed'] = True
+                flash('Successfuly installed!', 'success')
+                user_login = userClass.login(user_data['_id'], user_data['new_pass'])
+                if user_login['error']:
+                    flash(user_login['error'], 'error')
+                else:
+                    userClass.start_session(user_login['data'])
+                    flash('You are successfuly logged in!', 'success')
+                    return redirect(url_for('posts'))
     else:
         if settingsClass.is_installed():
             return redirect(url_for('index'))
@@ -328,9 +345,10 @@ def csrf_protect():
 
 @app.before_request
 def is_installed():
-    if url_for('static', filename='') not in request.path and request.path != url_for('install'):
-        if not settingsClass.is_installed():
-            return redirect(url_for('install'))
+    if not session.get('installed', None):
+        if url_for('static', filename='') not in request.path and request.path != url_for('install'):
+            if not settingsClass.is_installed():
+                return redirect(url_for('install'))
 
 
 @app.errorhandler(404)
