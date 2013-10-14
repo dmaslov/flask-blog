@@ -272,6 +272,37 @@ def recent_feed():
     return feed.get_response()
 
 
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required()
+def blog_settings():
+    error = None
+    error_type = 'validate'
+    if request.method == 'POST':
+        blog_data = {
+            'title': request.form.get('blog-title', None),
+            'per_page': request.form.get('blog-perpage', None),
+            'text_search': request.form.get('blog-text-search', None)
+        }
+        blog_data['text_search'] = 1 if blog_data['text_search'] else 0
+        for key, value in blog_data.items():
+            if not value and key != 'text_search':
+                error = True
+                break
+        if not error:
+            update_result = settingsClass.update_settings(blog_data)
+            if update_result['error']:
+                flash(update_result['error'], 'error')
+            else:
+                flash('Settings successfuly updated', 'success')
+                return redirect(url_for('blog_settings'))
+
+    return render_template('settings.html',
+                           default_settings=app.config,
+                           meta_title='Settings',
+                           error=error,
+                           error_type=error_type)
+
+
 @app.route('/install', methods=['GET', 'POST'])
 def install():
     if session.get('installed', None):
@@ -293,16 +324,16 @@ def install():
         blog_data = {
             'title': request.form.get('blog-title', None),
             'per_page': request.form.get('blog-perpage', None),
-            'use_search': request.form.get('blog-search', None)
+            'text_search': request.form.get('blog-text-search', None)
         }
-        blog_data['use_search'] = 1 if blog_data['use_search'] else 0
+        blog_data['text_search'] = 1 if blog_data['text_search'] else 0
 
         for key, value in user_data.items():
             if not value and key != 'update':
                 user_error = True
                 break
         for key, value in blog_data.items():
-            if not value and key != 'use_search':
+            if not value and key != 'text_search':
                 blog_error = True
                 break
 
@@ -345,6 +376,7 @@ def csrf_protect():
 
 @app.before_request
 def is_installed():
+    app.config = settingsClass.get_config()
     if not session.get('installed', None):
         if url_for('static', filename='') not in request.path and request.path != url_for('install'):
             if not settingsClass.is_installed():
@@ -364,7 +396,6 @@ def format_datetime_filter(input_value, format_="%a, %d %b %Y"):
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
 settingsClass = settings.Settings(app.config)
-app.config = settingsClass.get_config()
 postClass = post.Post(app.config)
 userClass = user.User(app.config)
 

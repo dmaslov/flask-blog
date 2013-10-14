@@ -79,6 +79,17 @@ class Settings:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Install error..'
 
+    def update_settings(self, data):
+        self.response['error'] = None
+        try:
+            cursor = self.collection.find_one()
+            self.collection.update({'_id': cursor['_id']}, {'$set': data}, upsert=False, multi=False)
+            self.response['data'] = True
+            return self.response
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Settings update error..'
+
     @staticmethod
     def print_debug_info(msg, show=False):
         if show:
