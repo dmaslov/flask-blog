@@ -3,7 +3,7 @@
 	{%- block head -%}{%- include 'head.html' -%}{%- endblock -%}
 	<body>
 		<div id="wrapper">
-			{%- include 'nav.html' -%}
+			{%- block nav -%}{%- include 'nav.html' -%}{%- endblock -%}
 			<div class="container">
 				{%- block body -%}
 					{%- if posts -%}

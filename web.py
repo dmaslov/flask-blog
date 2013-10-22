@@ -66,7 +66,6 @@ def search_results(page, query):
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    print '\n\n\033[93m' + str(request.method) + '\033[0m\n\n'
     if request.method != 'POST':
         return redirect(url_for('index'))
 
