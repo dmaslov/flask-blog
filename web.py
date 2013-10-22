@@ -34,8 +34,8 @@ def index(page):
 @app.route('/tag/<tag>/page-<int:page>')
 def posts_by_tag(tag, page):
     skip = (page - 1) * int(app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, tag)
-    count = postClass.get_total_count(tag)
+    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, tag=tag)
+    count = postClass.get_total_count(tag=tag)
     if not posts['data']:
         abort(404)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
@@ -48,6 +48,33 @@ def single_post(permalink):
     if not post['data']:
         abort(404)
     return render_template('single_post.html', post=post['data'], meta_title=post['data']['title'])
+
+
+@app.route('/q/<query>', defaults={'page': 1})
+@app.route('/q/<query>/page-<int:page>')
+def search_results(page, query):
+    skip = (page - 1) * int(app.config['PER_PAGE'])
+    if query:
+        posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, search=query)
+    else:
+        posts = []
+        posts['data'] = []
+    count = postClass.get_total_count(search=query)
+    pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Search results')
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    print '\n\n\033[93m' + str(request.method) + '\033[0m\n\n'
+    if request.method != 'POST':
+        return redirect(url_for('index'))
+
+    query = request.form.get('query', None)
+    if query:
+        return redirect(url_for('search_results', query=query))
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/newpost', methods=['GET', 'POST'])

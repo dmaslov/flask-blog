@@ -10,11 +10,16 @@ class Post:
         self.response = {'error': None, 'data': None}
         self.debug_mode = default_config['DEBUG']
 
-    def get_posts(self, limit, skip, tag=None):
+    def get_posts(self, limit, skip, tag=None, search=None):
         self.response['error'] = None
         cond = {}
         if tag is not None:
             cond = {'tags': tag}
+        elif search is not None:
+            cond = {'$or': [
+                    {'title': {'$regex': search, '$options': 'i'}},
+                    {'body': {'$regex': search, '$options': 'i'}},
+                    {'preview': {'$regex': search, '$options': 'i'}}]}
         try:
             cursor = self.collection.find(cond).sort('date', direction=-1).skip(skip).limit(limit)
             self.response['data'] = []
@@ -68,10 +73,15 @@ class Post:
 
         return self.response
 
-    def get_total_count(self, tag=None):
+    def get_total_count(self, tag=None, search=None):
         cond = {}
         if tag is not None:
             cond = {'tags': tag}
+        elif search is not None:
+            cond = {'$or': [
+                    {'title': {'$regex': search, '$options': 'i'}},
+                    {'body': {'$regex': search, '$options': 'i'}},
+                    {'preview': {'$regex': search, '$options': 'i'}}]}
 
         return self.collection.find(cond).count()
 

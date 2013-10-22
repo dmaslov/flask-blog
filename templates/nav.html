@@ -18,5 +18,9 @@
 			<li><a href="{{ url_for('logout') }}">Logout</a></li>
 			{% endif %}
 		</ul>
+		<form class="navbar-form navbar-right search-form" method="post" action="{{ url_for('search') }}">
+            <input type="text" name="query" class="form-control col-lg-8" placeholder="Search">
+			<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+		</form>
 	</div>
 </div>
