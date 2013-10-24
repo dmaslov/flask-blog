@@ -1,4 +1,5 @@
 import cgi
+import os
 from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
@@ -433,4 +434,4 @@ if not app.config['DEBUG']:
     app.logger.addHandler(file_handler)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=app.config['DEBUG'])
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=app.config['DEBUG'])
