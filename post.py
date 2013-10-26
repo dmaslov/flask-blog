@@ -2,6 +2,7 @@ import re
 import datetime
 import cgi
 from bson.objectid import ObjectId
+from helper_functions import *
 
 
 class Post:
@@ -121,10 +122,11 @@ class Post:
 
     @staticmethod
     def validate_post_data(post_data):
-        exp = re.compile('\W')
-        whitespace = re.compile('\s')
-        temp_title = whitespace.sub("_", post_data['title'])
-        permalink = exp.sub('', temp_title)
+        permalink = random_string(12)
+        #exp = re.compile('\W')
+        #whitespace = re.compile('\s')
+        #temp_title = whitespace.sub("_", post_data['title'])
+        #permalink = exp.sub('', temp_title)
 
         post_data['title'] = cgi.escape(post_data['title'], quote=True)
         post_data['preview'] = cgi.escape(post_data['preview'], quote=True)

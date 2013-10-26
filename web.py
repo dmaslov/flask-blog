@@ -287,14 +287,14 @@ def save_user():
 
 @app.route('/recent_feed')
 def recent_feed():
-    feed = AtomFeed('Recent Articles',
+    feed = AtomFeed(app.config['BLOG_TITLE']+'::Recent Articles',
                     feed_url=request.url, url=request.url_root)
-    posts = postClass.get_posts(app.config['PER_PAGE'], 0)
+    posts = postClass.get_posts(int(app.config['PER_PAGE']), 0)
     for post in posts['data']:
         feed.add(post['title'], md(post['body']),
                  content_type='html',
                  author=post['author'],
-                 url=make_external(post['permalink']),
+                 url=make_external(url_for('single_post', permalink=post['permalink'])),
                  updated=post['date'])
     return feed.get_response()
 
