@@ -40,7 +40,7 @@ def posts_by_tag(tag, page):
     if not posts['data']:
         abort(404)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Records by tag: '+tag)
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: '+tag)
 
 
 @app.route('/post/<permalink>')
@@ -109,7 +109,7 @@ def new_post():
                 if request.form.get('post-id'):
                     response = postClass.edit_post(request.form['post-id'], post)
                     if not response['error']:
-                        flash('Record updated!', 'success')
+                        flash('Post updated!', 'success')
                     else:
                         flash(response['error'], 'error')
                     return redirect(url_for('posts'))
@@ -120,12 +120,12 @@ def new_post():
                         error_type = 'post'
                         flash(response['error'], 'error')
                     else:
-                        flash('New record created!', 'success')
+                        flash('New post created!', 'success')
     else:
         if session.get('post-preview') and session['post-preview']['action'] == 'edit':
             session.pop('post-preview', None)
     return render_template('new_post.html',
-                           meta_title='New record',
+                           meta_title='New post',
                            error=error,
                            error_type=error_type)
 
@@ -134,7 +134,7 @@ def new_post():
 @login_required()
 def post_preview():
     post = session.get('post-preview')
-    return render_template('preview.html', post=post, meta_title='Preview record::'+post['title'])
+    return render_template('preview.html', post=post, meta_title='Preview post::'+post['title'])
 
 
 @app.route('/posts_list', defaults={'page': 1})
@@ -150,7 +150,7 @@ def posts(page):
     if not posts['data']:
         abort(404)
 
-    return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Records list')
+    return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Posts')
 
 
 @app.route('/post_edit?id=<id>')
@@ -164,7 +164,7 @@ def post_edit(id):
     if session.get('post-preview') and session['post-preview']['action'] == 'add':
         session.pop('post-preview', None)
     return render_template('edit_post.html',
-                           meta_title='Edit record::'+post['data']['title'],
+                           meta_title='Edit post::'+post['data']['title'],
                            post=post['data'],
                            error=False,
                            error_type=False)
@@ -176,11 +176,11 @@ def post_del(id):
     if postClass.get_total_count() > 1:
         response = postClass.delete_post(id)
         if response['data'] is True:
-            flash('Record removed!', 'success')
+            flash('Post removed!', 'success')
         else:
             flash(response['error'], 'error')
     else:
-        flash('Need to be at least one record..', 'error')
+        flash('Need to be at least one post..', 'error')
 
     return redirect(url_for('posts'))
 
@@ -225,7 +225,7 @@ def logout():
 @login_required()
 def users_list():
     users = userClass.get_users()
-    return render_template('users.html', users=users['data'], meta_title='Users list')
+    return render_template('users.html', users=users['data'], meta_title='Users')
 
 
 @app.route('/add_user')
