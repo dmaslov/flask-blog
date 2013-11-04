@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="page-header">
-                    <h1>Wellcome to Install Page!</h1>
+                    <h1>Welcome to Install Page!</h1>
                 </div>
                 <div class="content">
                     {%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -25,13 +25,13 @@
 	                        <legend>Blog section</legend>
                             <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 	                            {%- if error and error_type == 'validate' -%}
-	                                <label class="control-label" for="blog-title">Required Field</label>
+	                                <label class="control-label" for="blog-title">Required field</label>
 	                            {%- endif -%}
 	                            <input type="text" class="form-control" name="blog-title" id="blog-title" placeholder="Blog Title" required autocomplete="off">
 	                        </div>
 	                        <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 	                            {%- if error and error_type == 'validate' -%}
-	                                <label class="control-label" for="blog-perpage">Required Field</label>
+	                                <label class="control-label" for="blog-perpage">Required field</label>
 	                            {%- endif -%}
 	                            <input type="number" min="1" class="form-control" name="blog-perpage" id="blog-perpage" placeholder="Posts per page (default {{ default_settings['PER_PAGE'] }})" required autocomplete="off">
 	                        </div>
@@ -45,25 +45,25 @@
 	                        <legend>User section</legend>
 		                    <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-id">Required Field</label>
+									<label class="control-label" for="user-id">Required field</label>
 								{%- endif -%}
 							    <input type="text" class="form-control" name="user-id" id="user-id" placeholder="Username" value="" required autocomplete="off">
 							</div>
 							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-email">Required Field</label>
+									<label class="control-label" for="user-email">Required field</label>
 								{%- endif -%}
 							    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="" required autocomplete="off">
 							</div>
 	                        <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-new-password">Required Field</label>
+									<label class="control-label" for="user-new-password">Required field</label>
 								{%- endif -%}
 							    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="Password" value="" required autocomplete="off">
 							</div>
 							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-new-password-again">Required Field</label>
+									<label class="control-label" for="user-new-password-again">Required field</label>
 								{%- endif -%}
 							    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="Repeat Password" value="" required autocomplete="off">
 							</div>

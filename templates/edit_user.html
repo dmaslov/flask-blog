@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="page-header">
-					<h1>Edit User</h1>
+					<h1>Edit user</h1>
 				</div>
 				<div class="content">
 					{%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -25,13 +25,13 @@
 								<fieldset>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-username">Required Field</label>
+											<label class="control-label" for="user-username">Required field</label>
 										{%- endif -%}
 									    <input type="text" class="form-control" name="user-username" id="user-username" placeholder="Username" value="{{ user['_id'] }}" required autocomplete="off" disabled>
 									</div>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-email">Required Field</label>
+											<label class="control-label" for="user-email">Required field</label>
 										{%- endif -%}
 									    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="{{ user['email'] }}" required autocomplete="off">
 									</div>
@@ -40,19 +40,19 @@
 								<legend>Password section</legend>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-old-password">Required Field</label>
+											<label class="control-label" for="user-old-password">Required field</label>
 										{%- endif -%}
 									    <input type="password" class="form-control" name="user-old-password" id="user-old-password" placeholder="Current Password" autocomplete="off">
 									</div>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-new-password">Required Field</label>
+											<label class="control-label" for="user-new-password">Required field</label>
 										{%- endif -%}
 									    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="New Password" autocomplete="off">
 									</div>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-new-password-again">Required Field</label>
+											<label class="control-label" for="user-new-password-again">Required field</label>
 										{%- endif -%}
 									    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="New Password Repeat" autocomplete="off">
 									</div>

@@ -43,7 +43,7 @@ class Post:
                                               'comments': post['comments']})
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Posts not found..'
+            self.response['error'] = 'Records not found..'
 
         return self.response
 
@@ -53,7 +53,7 @@ class Post:
             self.response['data'] = self.collection.find_one({'permalink': permalink})
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Post not found..'
+            self.response['error'] = 'Record not found..'
 
         return self.response
 
@@ -70,7 +70,7 @@ class Post:
                     self.response['data']['preview'] = ''
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Post not found..'
+            self.response['error'] = 'Record not found..'
 
         return self.response
 
@@ -103,7 +103,7 @@ class Post:
             self.response['data'] = True
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Post update failed..'
+            self.response['error'] = 'Record update error..'
 
         return self.response
 

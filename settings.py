@@ -23,7 +23,7 @@ class Settings:
             return self.config
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'System error'
+            self.response['error'] = 'System error..'
 
     def is_installed(self):
         posts_cnt = self.config['POSTS_COLLECTION'].find().count()
@@ -64,7 +64,7 @@ class Settings:
                 blog_settings_error = None
                 self.collection.insert(blog_data)
             else:
-                blog_settings_error = 'Per page need to be integer..'
+                blog_settings_error = '"Per page" field need to be integer..'
 
             if user_create['error'] or post_create['error'] or blog_settings_error:
                 self.response['error'] = []
@@ -77,7 +77,7 @@ class Settings:
             return self.response
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Install error..'
+            self.response['error'] = 'Installation error..'
 
     def update_settings(self, data):
         self.response['error'] = None

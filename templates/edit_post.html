@@ -33,7 +33,7 @@
 					<form id="post-form" role="form" method="post" action="{{ url_for('new_post') }}">
 						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
-								<label class="control-label" for="post-title">Required Field</label>
+								<label class="control-label" for="post-title">Required field</label>
 							{%- endif -%}
 						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="Post Title" required value="{{ post_title }}">
 					    </div>
@@ -42,7 +42,7 @@
 					    </div>
 						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
-								<label class="control-label" for="post-full">Required Field</label>
+								<label class="control-label" for="post-full">Required field</label>
 							{%- endif -%}
 						    <textarea id="post-full" name="post-full" class="form-control" rows="6" placeholder="Full Text" required>{{ post_body }}</textarea>
 					    </div>

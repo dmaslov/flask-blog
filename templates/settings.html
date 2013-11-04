@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="page-header">
-                    <h1>Blog settings</h1>
+                    <h1>Settings</h1>
                 </div>
                 <div class="content">
                     {%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -20,15 +20,15 @@
 	                <form role="form" method="post" action="{{ url_for('blog_settings') }}">
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
                             {%- if error and error_type == 'validate' -%}
-                                <label class="control-label" for="blog-title">Required Field</label>
+                                <label class="control-label" for="blog-title">Required field</label>
 	                        {%- else -%}
-	                            <label class="control-label" for="blog-title">Blog Title</label>
+	                            <label class="control-label" for="blog-title">Blog title</label>
                             {%- endif -%}
                             <input type="text" class="form-control" name="blog-title" id="blog-title" placeholder="Blog Title" value="{{ default_settings['BLOG_TITLE'] }}" required autocomplete="off">
                         </div>
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
                             {%- if error and error_type == 'validate' -%}
-                                <label class="control-label" for="blog-perpage">Required Field</label>
+                                <label class="control-label" for="blog-perpage">Required field</label>
 	                        {%- else -%}
 	                            <label class="control-label" for="blog-perpage">Posts per page</label>
                             {%- endif -%}

@@ -24,13 +24,13 @@ class User:
                     self.username = admin['_id']
                     self.email = admin['email']
                 else:
-                    self.response['error'] = 'Password don\'t match'
+                    self.response['error'] = 'Password doesn\'t match..'
             else:
-                self.response['error'] = 'User not found'
+                self.response['error'] = 'User not found..'
 
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'System error'
+            self.response['error'] = 'System error..'
 
         self.response['data'] = {'username': self.username, 'email': self.email}
         return self.response
@@ -113,10 +113,10 @@ class User:
                                     self.print_debug_info(e, self.debug_mode)
                                     self.response['error'] = 'Update user error..'
                             else:
-                                self.response['error'] = 'New password don\'t match..'
+                                self.response['error'] = 'New password doesn\'t match..'
                                 return self.response
                         else:
-                            self.response['error'] = 'Old password don\'t match..'
+                            self.response['error'] = 'Old password doesn\'t match..'
                             return self.response
                     else:
                         try:
@@ -130,7 +130,7 @@ class User:
                     return self.response
             else:
                 if exist_user:
-                    self.response['error'] = 'Username allready exists..'
+                    self.response['error'] = 'Username already exists..'
                     return self.response
                 else:
                     if user_data['new_pass'] and user_data['new_pass'] == user_data['new_pass_again']:
@@ -143,7 +143,7 @@ class User:
                             self.print_debug_info(e, self.debug_mode)
                             self.response['error'] = 'Create user user error..'
                     else:
-                        self.response['error'] = 'Passwords can\'t be blank and need to be the same..'
+                        self.response['error'] = 'Password cannot be blank and must be the same..'
                         return self.response
         else:
             self.response['error'] = 'Error..'

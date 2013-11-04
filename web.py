@@ -40,7 +40,7 @@ def posts_by_tag(tag, page):
     if not posts['data']:
         abort(404)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: '+tag)
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Records by tag: '+tag)
 
 
 @app.route('/post/<permalink>')
@@ -109,7 +109,7 @@ def new_post():
                 if request.form.get('post-id'):
                     response = postClass.edit_post(request.form['post-id'], post)
                     if not response['error']:
-                        flash('Post successfuly updated!', 'success')
+                        flash('Record updated!', 'success')
                     else:
                         flash(response['error'], 'error')
                     return redirect(url_for('posts'))
@@ -120,12 +120,12 @@ def new_post():
                         error_type = 'post'
                         flash(response['error'], 'error')
                     else:
-                        flash('New post successfuly created!', 'success')
+                        flash('New record created!', 'success')
     else:
         if session.get('post-preview') and session['post-preview']['action'] == 'edit':
             session.pop('post-preview', None)
     return render_template('new_post.html',
-                           meta_title='New Post',
+                           meta_title='New record',
                            error=error,
                            error_type=error_type)
 
@@ -134,7 +134,7 @@ def new_post():
 @login_required()
 def post_preview():
     post = session.get('post-preview')
-    return render_template('preview.html', post=post, meta_title='Preview Post::'+post['title'])
+    return render_template('preview.html', post=post, meta_title='Preview record::'+post['title'])
 
 
 @app.route('/posts_list', defaults={'page': 1})
@@ -150,7 +150,7 @@ def posts(page):
     if not posts['data']:
         abort(404)
 
-    return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Posts List')
+    return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Records list')
 
 
 @app.route('/post_edit?id=<id>')
@@ -164,7 +164,7 @@ def post_edit(id):
     if session.get('post-preview') and session['post-preview']['action'] == 'add':
         session.pop('post-preview', None)
     return render_template('edit_post.html',
-                           meta_title='Edit Post::'+post['data']['title'],
+                           meta_title='Edit record::'+post['data']['title'],
                            post=post['data'],
                            error=False,
                            error_type=False)
@@ -176,11 +176,11 @@ def post_del(id):
     if postClass.get_total_count() > 1:
         response = postClass.delete_post(id)
         if response['data'] is True:
-            flash('Post successfuly removed!', 'success')
+            flash('Record removed!', 'success')
         else:
             flash(response['error'], 'error')
     else:
-        flash('Need to be at least one post', 'error')
+        flash('Need to be at least one record..', 'error')
 
     return redirect(url_for('posts'))
 
@@ -202,7 +202,7 @@ def login():
                 flash(user_data['error'], 'error')
             else:
                 userClass.start_session(user_data['data'])
-                flash('You are successfuly logged in!', 'success')
+                flash('You are logged in!', 'success')
                 return redirect(url_for('posts'))
     else:
         if session.get('user'):
@@ -217,7 +217,7 @@ def login():
 @app.route('/logout')
 def logout():
     if userClass.logout():
-        flash('You are successfuly logged out!', 'success')
+        flash('You are logged out!', 'success')
     return redirect(url_for('login'))
 
 
@@ -225,21 +225,21 @@ def logout():
 @login_required()
 def users_list():
     users = userClass.get_users()
-    return render_template('users.html', users=users['data'], meta_title='Users List')
+    return render_template('users.html', users=users['data'], meta_title='Users list')
 
 
 @app.route('/add_user')
 @login_required()
 def add_user():
     gravatar_url = userClass.get_gravatar_link()
-    return render_template('add_user.html', gravatar_url=gravatar_url, meta_title='Add User')
+    return render_template('add_user.html', gravatar_url=gravatar_url, meta_title='Add user')
 
 
 @app.route('/edit_user?id=<id>')
 @login_required()
 def edit_user(id):
     user = userClass.get_user(id)
-    return render_template('edit_user.html', user=user['data'], meta_title='Edit User')
+    return render_template('edit_user.html', user=user['data'], meta_title='Edit user')
 
 
 @app.route('/delete_user?id=<id>')
@@ -250,7 +250,7 @@ def delete_user(id):
         if user['error']:
             flash(user['error'], 'error')
         else:
-            flash('User successful deleted', 'success')
+            flash('User deleted!', 'success')
     return redirect(url_for('users_list'))
 
 
@@ -266,7 +266,7 @@ def save_user():
         'update': request.form.get('user-update', False)
     }
     if not post_data['email'] or not post_data['_id']:
-        flash('Username and Email required', 'error')
+        flash('Username and Email are required..', 'error')
         if post_data['update']:
                 return redirect(url_for('edit_user', id=post_data['_id']))
         else:
@@ -280,7 +280,7 @@ def save_user():
             else:
                 return redirect(url_for('add_user'))
         else:
-            message = 'User update successful!' if post_data['update'] else 'Add user successful!'
+            message = 'User updated!' if post_data['update'] else 'User added!'
             flash(message, 'success')
     return redirect(url_for('edit_user', id=post_data['_id']))
 
@@ -320,7 +320,7 @@ def blog_settings():
             if update_result['error']:
                 flash(update_result['error'], 'error')
             else:
-                flash('Settings successfuly updated', 'success')
+                flash('Settings updated!', 'success')
                 return redirect(url_for('blog_settings'))
 
     return render_template('settings.html',
@@ -374,13 +374,13 @@ def install():
                         flash(i, 'error')
             else:
                 session['installed'] = True
-                flash('Successfuly installed!', 'success')
+                flash('Successfully installed!', 'success')
                 user_login = userClass.login(user_data['_id'], user_data['new_pass'])
                 if user_login['error']:
                     flash(user_login['error'], 'error')
                 else:
                     userClass.start_session(user_login['data'])
-                    flash('You are successfuly logged in!', 'success')
+                    flash('You are logged in!', 'success')
                     return redirect(url_for('posts'))
     else:
         if settingsClass.is_installed():

@@ -44,7 +44,7 @@ def login_required():
         @wraps(f)
         def wrapped(*args, **kwargs):
             if not session.get('user'):
-                flash('You need to loged in', 'error')
+                flash('You must be logged in..', 'error')
                 return redirect(url_for('login'))
             return f(*args, **kwargs)
         return wrapped

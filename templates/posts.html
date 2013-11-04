@@ -5,7 +5,7 @@
 			<div class="col-lg-12">
 				{%- if posts -%}
 					<div class="page-header">
-						<h1>Posts List</h1>
+						<h1>Records</h1>
 					</div>
 					<div class="content">
 						{%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -17,7 +17,7 @@
 		                        {%- endfor -%}
 		                    {%- endif -%}
 		                {%- endwith -%}
-						<a href="{{ url_for('new_post') }}" class="response btn btn-primary">New Post</a>
+						<a href="{{ url_for('new_post') }}" class="response btn btn-primary">New record</a>
 						<table class="table table-striped">
 							<tr>
 								<th>Title</th>
@@ -35,7 +35,7 @@
 					</div>
 				{%- else -%}
 					<div class="page-header">
-						<h1>Posts not found</h1>
+						<h1>Records not found..</h1>
 					</div>
 				{%- endif -%}
 		    </div>
