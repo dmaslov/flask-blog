@@ -15,7 +15,7 @@
 											<h1><a href="{{ url_for('single_post', permalink=post['permalink']) }}">{{ post['title'] }}</a></h1>
 											<p><i>Posted:&nbsp;{{ post['date'] |formatdate }} By {{ post['author'] }}</i></p>
 										</div>
-										<div class="content">
+										<div class="content no-lightbox">
 											{%- if post['preview'] -%}
 												{{ post['preview']|markdown }}
 											{%- else -%}
@@ -71,6 +71,7 @@
 		{%- block scripts -%}
 			<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
 			<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+			{%- block additional_js -%}{%- endblock -%}
 			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 		{%- endblock -%}
 	</body>
