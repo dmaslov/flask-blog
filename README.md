@@ -33,9 +33,13 @@ simple blog --engine-- written in [Flask](http://flask.pocoo.org/)
 
 # Install:
 `git clone https://github.com/dmaslov/flask-blog.git`
+
 `cd flask-blog`
+
 `virtualenv --no-site-packages ./env`
+
 `source ./env/bin/activate`
+
 `pip install -r requirements.txt`
 
 
