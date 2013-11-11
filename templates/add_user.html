@@ -16,11 +16,11 @@
 							{%- endfor -%}
 						{%- endif -%}
 					{%- endwith -%}
-					<form role="form" method="post" action="{{ url_for('save_user') }}">
-						<div class="col-lg-2">
+					<form class="form-user" role="form" method="post" action="{{ url_for('save_user') }}">
+						<div class="photo-user">
 							<img src="{{ gravatar_url }}" class="img-circle">
 						</div>
-						<div class="col-lg-10">
+						<div>
 							<fieldset>
 							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
