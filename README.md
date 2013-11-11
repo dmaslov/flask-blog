@@ -4,31 +4,31 @@ simple blog --engine-- written in [Flask](http://flask.pocoo.org/)
 
 
 # Under the hood
-- [python](http://python.org/)
-- [Flask](http://flask.pocoo.org/)
-- [mongoDB](http://www.mongodb.org/)
-- [bootstrap 3](http://getbootstrap.com/)
-- [jQuery](http://jquery.com)
-- [Lightbox 2](https://github.com/lokesh/lightbox2)
-- [Markdown](http://daringfireball.net/projects/markdown/syntax)
+- [python](http://python.org/);
+- [Flask](http://flask.pocoo.org/);
+- [mongoDB](http://www.mongodb.org/);
+- [bootstrap 3](http://getbootstrap.com/);
+- [jQuery](http://jquery.com);
+- [Lightbox 2](https://github.com/lokesh/lightbox2);
+- [Markdown](http://daringfireball.net/projects/markdown/syntax).
 
 
 # What it can
-- create/preview/update/delete articles
-- create/update/delete users
-- search
-- Atom feed
+- create/preview/update/delete articles;
+- create/update/delete users;
+- search;
+- Atom feed.
 
 # It contains
-- it has WYSIWYG Markdown editor
-- it has [AddThis](http://www.addthis.com/) social buttons
-- it use [gravatar](http://gravatar.com) for userpic
+- it has WYSIWYG Markdown editor;
+- it has [AddThis](http://www.addthis.com/) social buttons;
+- it use [gravatar](http://gravatar.com) for userpic.
 
 
 # To Do:
-- mongoDB text search
-- comments maybe
-- drafts
+- mongoDB text search;
+- comments maybe;
+- drafts.
 
 
 # Install:
