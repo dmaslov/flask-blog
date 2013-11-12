@@ -92,7 +92,7 @@ class Post:
             self.response['data'] = self.collection.insert(post_data)
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Inserting post error..'
+            self.response['error'] = 'Adding post error..'
 
         return self.response
 
@@ -116,7 +116,7 @@ class Post:
                 self.response['data'] = False
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
-            self.response['error'] = 'Remove post error..'
+            self.response['error'] = 'Deleting post error..'
 
         return self.response
 
