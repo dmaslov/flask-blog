@@ -1,13 +1,13 @@
 # flask-blog
 
-simple blog --engine-- written in [Flask](http://flask.pocoo.org/)
+simple blog --engine-- written on [Flask](http://flask.pocoo.org/)
 
 
 # Under the hood:
-- [python](http://python.org/)
+- [Python](http://python.org/)
 - [Flask](http://flask.pocoo.org/)
-- [mongoDB](http://www.mongodb.org/)
-- [bootstrap 3](http://getbootstrap.com/)
+- [MongoDB](http://www.mongodb.org/)
+- [Bootstrap 3](http://getbootstrap.com/)
 - [jQuery](http://jquery.com)
 - [Lightbox 2](https://github.com/lokesh/lightbox2)
 - [Markdown](http://daringfireball.net/projects/markdown/syntax)
@@ -17,12 +17,12 @@ simple blog --engine-- written in [Flask](http://flask.pocoo.org/)
 - create/preview/update/delete articles;
 - create/update/delete users;
 - search;
-- Atom feed.
+- atom feed.
 
 # It contains:
-- it has WYSIWYG Markdown editor;
-- it has [AddThis](http://www.addthis.com/) social buttons;
-- it use [gravatar](http://gravatar.com) for userpic.
+- WYSIWYG Markdown editor;
+- [AddThis](http://www.addthis.com/) social buttons;
+- [Gravatar](http://gravatar.com) for userpic.
 
 
 # To Do:
@@ -31,7 +31,7 @@ simple blog --engine-- written in [Flask](http://flask.pocoo.org/)
 - drafts
 
 
-# Install:
+# Installation:
 `git clone https://github.com/dmaslov/flask-blog.git`
 
 `cd flask-blog`
@@ -59,7 +59,7 @@ When you run the application for the first time the "Install" page appears. You 
 
 ![install_page](http://i.imgur.com/gkWI10v.png)
 
-If you have an account on [Gravatar](http://gravatar.com) and your logged-in email links to it, the userpic will display. It will be a random gravatar image if you don't.
+If you have an account on [Gravatar](http://gravatar.com) and your logged-in email links to it, the userpic will display. It will be a random gravatar image if it doesn't.
 
 All necessary MongoDB indexes will be created during the installation. A test text post will be created as well.
 
@@ -69,7 +69,7 @@ If you want to start it from scratch please remove all existing collections from
 
 For deploying you can use [Heroku](http://heroku.com) and [mongolab](http://mongolab.com) for example.
 
-If you are using mongolab, please copy the outlined on screenshot line to connect using driver, type in your dbuser and dbpassword and paste the line into the `CONNECTION_STRING` variable in the `config.py` file.
+If you are using mongolab, please copy the outlined on the screenshot line to connect using driver, type in your dbuser and dbpassword and paste the line into the `CONNECTION_STRING` variable in the `config.py` file.
 
 ![mongolab_databases](http://i.imgur.com/VcoTh16.png)
 
@@ -78,17 +78,17 @@ For Heroku you'll find `gunicorn` server in the `requirements.txt` file. You are
 
 
 # WYSIWYG editor:
-WYSIWYG editor uses [markdown](http://daringfireball.net/projects/markdown/syntax). Only available on the editor panel tags are intepreted.
+WYSIWYG editor uses [Markdown](http://daringfireball.net/projects/markdown/syntax). Only available on the editor panel tags are intepreted.
 
 ![wysiwyg_editor_panel](http://i.imgur.com/D6aFuLT.png)
 
 The editor is based on [MDMagick](https://github.com/fguillen/MDMagick) project.
 
-To insert any tag you need to SELECT a word and then click on needed tag on editor panel.
+To insert any tag you need to SELECT a word and then click on a needed tag on the editor panel.
 
 You can insert github [Gists](https://gist.github.com/).
 
-For this type a word in the editor, select it like you did when you added a tag from the panel, copen the embed gist link from the github gists page and paste it to the dialog window.
+For this type a word in the editor, select it like you did when you added a tag from the panel, copy the embed gist link from the github gists page and paste it to the dialog window.
 
 The word will be replaced with a working gist tag.
 
