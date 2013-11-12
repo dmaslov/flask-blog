@@ -84,16 +84,18 @@ WYSIWYG editor uses [markdown](http://daringfireball.net/projects/markdown/synta
 
 The editor is based on [MDMagick](https://github.com/fguillen/MDMagick) project
 
-To add a tag you need to type in a word then SELECT IT and apply a tag by hitting a needed button on the panel.
+To insert any tag you need to SELECT a word and then click on needed tag on editor panel.
 
-You can insert github [Gists](https://gist.github.com/). To do that you need to write something in editor, select it like you do when you paste any editor tag from panel, copy embed gist link from github gist page and paste it to dialog window.
+You can insert github [Gists](https://gist.github.com/).
 
-Your text will be replaced on working gist tag.
+For this type a word in the editor, select it like you did when you added a tag from the panel, copen the embed gist link from the github gists page and paste it to the dialog window.
+
+The word will be replaced with a working gist tag.
 
 ![gist_page](http://i.imgur.com/Zagr8Uv.png)
 
 ![inser_gist](http://i.imgur.com/nqS4Isz.png)
 
-To insert an image you also need to select word, whitch will be used like title attribute and in dialog window paste image url
+To insert an image you also need to select a word that will be used like a title attribute and paste the image URL into the dialog window.
 
 ![insert_image](http://i.imgur.com/suxPgI0.png)
