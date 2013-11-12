@@ -67,7 +67,7 @@ There should be at least one post and one user for the database to be installed.
 
 If you want to start it from scratch please remove all existing collections from your database and delete the browser session cookie. The Install page will show up again.
 
-For deploying you can use [Heroku](http://heroku.com) and [mongolab](http://mongolab.com) for example
+For deploying you can use [Heroku](http://heroku.com) and [mongolab](http://mongolab.com) for example.
 
 If you are using mongolab, please copy the outlined on screenshot line to connect using driver, type in your dbuser and dbpassword and paste the line into the `CONNECTION_STRING` variable in the `config.py` file.
 
@@ -82,7 +82,7 @@ WYSIWYG editor uses [markdown](http://daringfireball.net/projects/markdown/synta
 
 ![wysiwyg_editor_panel](http://i.imgur.com/D6aFuLT.png)
 
-The editor is based on [MDMagick](https://github.com/fguillen/MDMagick) project
+The editor is based on [MDMagick](https://github.com/fguillen/MDMagick) project.
 
 To insert any tag you need to SELECT a word and then click on needed tag on editor panel.
 
