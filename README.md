@@ -58,13 +58,13 @@ When you in project dir with actived environment just type in terminal
 
 `python web.py`
 
-[builtin_run](http://i.imgur.com/dkEL5aS.png)
+![builtin_run](http://i.imgur.com/dkEL5aS.png)
 
 or
 
 `gunicorn web:app`
 
-[gunicorn_run](http://i.imgur.com/rCp0g25.png)
+![gunicorn_run](http://i.imgur.com/rCp0g25.png)
 
 # Usage:
 When you run the application for the first time the "Install" page appears. You need to create a user profile and set some display settings on this page.
