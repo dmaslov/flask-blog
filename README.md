@@ -2,6 +2,12 @@
 
 simple blog ~~engine~~ written on [Flask](http://flask.pocoo.org/)
 
+# Demo:
+you can try it [here](http://flask-blog-demo.herokuapp.com/)
+
+login:demo
+
+pass:demo
 
 # Under the hood:
 - [Python](http://python.org/)
