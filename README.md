@@ -1,6 +1,6 @@
 # flask-blog
 
-simple blog --engine-- written on [Flask](http://flask.pocoo.org/)
+simple blog ~~engine~~ written on [Flask](http://flask.pocoo.org/)
 
 
 # Under the hood:
