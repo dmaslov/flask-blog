@@ -98,6 +98,7 @@ class Post:
 
     def edit_post(self, post_id, post_data):
         self.response['error'] = None
+        del post_data['date']
         try:
             self.collection.update({'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
             self.response['data'] = True
