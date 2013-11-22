@@ -195,7 +195,7 @@ def login():
         if not username or not password:
             error = True
         else:
-            user_data = userClass.login(username, password)
+            user_data = userClass.login(username.lower().strip(), password)
             if user_data['error']:
                 error = True
                 error_type = 'login'
@@ -258,7 +258,7 @@ def delete_user(id):
 @login_required()
 def save_user():
     post_data = {
-        '_id': request.form.get('user-id', None),
+        '_id': request.form.get('user-id', None).lower().strip(),
         'email': request.form.get('user-email', None),
         'old_pass': request.form.get('user-old-password', None),
         'new_pass': request.form.get('user-new-password', None),
@@ -342,7 +342,7 @@ def install():
         blog_error = False
 
         user_data = {
-            '_id': request.form.get('user-id', None),
+            '_id': request.form.get('user-id', None).lower().strip(),
             'email': request.form.get('user-email', None),
             'new_pass': request.form.get('user-new-password', None),
             'new_pass_again': request.form.get('user-new-password-again', None),
