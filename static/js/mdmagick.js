@@ -203,16 +203,16 @@ MDM.Utils = {
     var template =
       "<div class=\"mdm-buttons mdm-control\">" +
       "  <ul>" +
-      "    <li class=\"mdm-bold\"><a title=\"bold\" class=\"icon-bold\" href=\"#mdm-bold\"><span>B</span></a></li>" +
-      "    <li class=\"mdm-italic\"><a title=\"italic\" class=\"icon-italic\" href=\"#mdm-italic\"><span>I</span></a></li>" +
-      "    <li class=\"mdm-strike\"><a title=\"strikethrough\" class=\"icon-strikethrough\" href=\"#mdm-strike\"><span>S</span></a></li>" +
-      "    <li class=\"mdm-title\"><a title=\"height\" class=\"icon-text-height\" href=\"#mdm-title\"><span>T</span></a></li>" +
-      "    <li class=\"mdm-quote\"><a title=\"blockquote\" class=\"icon-comment-alt\" href=\"#mdm-quote\"><span>Q</span></a></li>" +
-      "    <li class=\"mdm-code\"><a title=\"code\" class=\"icon-code\" href=\"#mdm-code\"><span>C</span></a></li>" +
-      "    <li class=\"mdm-list\"><a title=\"list\" class=\"icon-list-ul\" href=\"#mdm-list\"><span>l</span></a></li>" +
-      "    <li class=\"mdm-link\"><a title=\"link\" class=\"icon-link\" href=\"#mdm-link\"><span>a</span></a></li>" +
-      "    <li class=\"mdm-img\"><a title=\"img\" class=\"icon-picture\" href=\"#mdm-img\"><span>Img</span></a></li>" +
-      "    <li class=\"mdm-gist\"><a title=\"GitHub Gist\" class=\"icon-github bigger\" href=\"#mdm-gist\"><span>G</span></a></li>" +
+      "    <li class=\"mdm-bold\"><a tabindex=\"-1\" title=\"bold\" class=\"icon-bold\" href=\"#mdm-bold\"><span>B</span></a></li>" +
+      "    <li class=\"mdm-italic\"><a tabindex=\"-1\" title=\"italic\" class=\"icon-italic\" href=\"#mdm-italic\"><span>I</span></a></li>" +
+      "    <li class=\"mdm-strike\"><a tabindex=\"-1\" title=\"strikethrough\" class=\"icon-strikethrough\" href=\"#mdm-strike\"><span>S</span></a></li>" +
+      "    <li class=\"mdm-title\"><a tabindex=\"-1\" title=\"height\" class=\"icon-text-height\" href=\"#mdm-title\"><span>T</span></a></li>" +
+      "    <li class=\"mdm-quote\"><a tabindex=\"-1\" title=\"blockquote\" class=\"icon-comment-alt\" href=\"#mdm-quote\"><span>Q</span></a></li>" +
+      "    <li class=\"mdm-code\"><a tabindex=\"-1\" title=\"code\" class=\"icon-code\" href=\"#mdm-code\"><span>C</span></a></li>" +
+      "    <li class=\"mdm-list\"><a tabindex=\"-1\" title=\"list\" class=\"icon-list-ul\" href=\"#mdm-list\"><span>l</span></a></li>" +
+      "    <li class=\"mdm-link\"><a tabindex=\"-1\" title=\"link\" class=\"icon-link\" href=\"#mdm-link\"><span>a</span></a></li>" +
+      "    <li class=\"mdm-img\"><a tabindex=\"-1\" title=\"img\" class=\"icon-picture\" href=\"#mdm-img\"><span>Img</span></a></li>" +
+      "    <li class=\"mdm-gist\"><a tabindex=\"-1\" title=\"GitHub Gist\" class=\"icon-github bigger\" href=\"#mdm-gist\"><span>G</span></a></li>" +
       "  </ul>" +
       "</div>";
 
