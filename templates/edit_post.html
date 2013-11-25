@@ -38,7 +38,7 @@
 						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="Post Title" required value="{{ post_title }}">
 					    </div>
 						<div class="form-group">
-						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Shost Text">{{ post_preview }}</textarea>
+						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Short Text">{{ post_preview }}</textarea>
 					    </div>
 						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
