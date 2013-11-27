@@ -125,7 +125,7 @@ input[type='checkbox'] {
 @media only screen and (max-width: 850px) {
     .search-form {width:185px;}
 }
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 767px) {
     .search-form {width:100%;}
 }
 .navbar-header .navbar-nav {
@@ -137,3 +137,4 @@ input[type='checkbox'] {
 	padding-top:14.5px;
 	padding-bottom:14.5px;
 }
+.navbar {min-height:53px;}
