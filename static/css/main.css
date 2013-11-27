@@ -128,3 +128,12 @@ input[type='checkbox'] {
 @media only screen and (max-width: 768px) {
     .search-form {width:100%;}
 }
+.navbar-header .navbar-nav {
+	float:left;
+	margin:0;
+}
+.navbar-header .nav>li {float:left;}
+.navbar-header .navbar-nav>li>a {
+	padding-top:14.5px;
+	padding-bottom:14.5px;
+}
