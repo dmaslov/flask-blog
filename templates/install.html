@@ -29,6 +29,9 @@
 	                            {%- endif -%}
 	                            <input type="text" class="form-control" name="blog-title" id="blog-title" placeholder="Blog Title" required autocomplete="off">
 	                        </div>
+                            <div class="form-group">
+	                            <input type="text" class="form-control" name="blog-description" id="blog-description" placeholder="Blog Description" autocomplete="off">
+	                        </div>
 	                        <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 	                            {%- if error and error_type == 'validate' -%}
 	                                <label class="control-label" for="blog-perpage">Required field</label>

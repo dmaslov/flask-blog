@@ -26,6 +26,10 @@
                             {%- endif -%}
                             <input type="text" class="form-control" name="blog-title" id="blog-title" placeholder="Blog Title" value="{{ default_settings['BLOG_TITLE'] }}" required autocomplete="off">
                         </div>
+	                    <div class="form-group">
+	                        <label class="control-label" for="blog-description">Blog description</label>
+                            <input type="text" class="form-control" name="blog-description" id="blog-description" placeholder="Blog Description" value="{{ default_settings['BLOG_DESCRIPTION'] }}" autocomplete="off">
+                        </div>
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
                             {%- if error and error_type == 'validate' -%}
                                 <label class="control-label" for="blog-perpage">Required field</label>

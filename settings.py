@@ -9,6 +9,7 @@ class Settings:
         self.config['PER_PAGE'] = 15
         self.config['SEARCH'] = False
         self.config['BLOG_TITLE'] = 'Blog'
+        self.config['BLOG_DESCRIPTION'] = ''
 
         self.response = {'error': None, 'data': None}
         self.debug_mode = default_config['DEBUG']
@@ -20,6 +21,7 @@ class Settings:
                 self.config['PER_PAGE'] = cursor.get('per_page', self.config['PER_PAGE'])
                 self.config['SEARCH'] = cursor.get('use_search', self.config['SEARCH'])
                 self.config['BLOG_TITLE'] = cursor.get('title', self.config['BLOG_TITLE'])
+                self.config['BLOG_DESCRIPTION'] = cursor.get('description', self.config['BLOG_DESCRIPTION'])
             return self.config
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
