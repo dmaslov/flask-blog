@@ -54,6 +54,21 @@ footer p {
 }
 footer a {color: #d6d8dd;}
 
+.sidebar {
+	float: right;
+	position: absolute;
+	top: 92px;
+	right: 5px;
+}
+.sidebar hr {margin-top:0;}
+.sidebar ul {padding:0;}
+.sidebar li {
+    list-style-type: none;
+    line-height: 24px;
+}
+
+.badge {font-size: 10px;}
+
 .not-found {text-align: center;}
 .not-found h1 {
     font-size: 100px !important;

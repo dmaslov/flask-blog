@@ -1,4 +1,3 @@
-import re
 import datetime
 import cgi
 from bson.objectid import ObjectId
@@ -85,6 +84,27 @@ class Post:
                     {'preview': {'$regex': search, '$options': 'i'}}]}
 
         return self.collection.find(cond).count()
+
+    def get_tags(self):
+        self.response['error'] = None
+        try:
+            self.response['data'] = self.collection.aggregate([
+                {'$unwind': '$tags'},
+                {'$group': {'_id': '$tags', 'count': {'$sum': 1}}},
+                {'$sort': {'count': -1}},
+                {'$limit': 10},
+                {'$project': {'title': '$_id', 'count': 1, '_id': 0}}
+            ])
+            if self.response['data']['result']:
+                self.response['data'] = self.response['data']['result']
+            else:
+                self.response['data'] = []
+
+        except Exception, e:
+            self.print_debug_info(e, self.debug_mode)
+            self.response['error'] = 'Get tags error..'
+
+        return self.response
 
     def create_new_post(self, post_data):
         self.response['error'] = None
