@@ -40,7 +40,7 @@ def posts_by_tag(tag, page):
     if not posts['data']:
         abort(404)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: '+tag)
+    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: ' + tag)
 
 
 @app.route('/post/<permalink>')
@@ -48,7 +48,7 @@ def single_post(permalink):
     post = postClass.get_post_by_permalink(permalink)
     if not post['data']:
         abort(404)
-    return render_template('single_post.html', post=post['data'], meta_title=app.config['BLOG_TITLE']+'::'+post['data']['title'])
+    return render_template('single_post.html', post=post['data'], meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
 @app.route('/q/<query>', defaults={'page': 1})
@@ -56,7 +56,8 @@ def single_post(permalink):
 def search_results(page, query):
     skip = (page - 1) * int(app.config['PER_PAGE'])
     if query:
-        posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, search=query)
+        posts = postClass.get_posts(
+            int(app.config['PER_PAGE']), skip, search=query)
     else:
         posts = []
         posts['data'] = []
@@ -97,9 +98,11 @@ def new_post():
             post = postClass.validate_post_data(post_data)
             if request.form.get('post-preview') == '1':
                 session['post-preview'] = post
-                session['post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
+                session[
+                    'post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
                 if request.form.get('post-id'):
-                    session['post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
+                    session[
+                        'post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
                 else:
                     session['post-preview']['redirect'] = url_for('new_post')
                 return redirect(url_for('post_preview'))
@@ -107,7 +110,8 @@ def new_post():
                 session.pop('post-preview', None)
 
                 if request.form.get('post-id'):
-                    response = postClass.edit_post(request.form['post-id'], post)
+                    response = postClass.edit_post(
+                        request.form['post-id'], post)
                     if not response['error']:
                         flash('Post updated!', 'success')
                     else:
@@ -134,7 +138,7 @@ def new_post():
 @login_required()
 def post_preview():
     post = session.get('post-preview')
-    return render_template('preview.html', post=post, meta_title='Preview post::'+post['title'])
+    return render_template('preview.html', post=post, meta_title='Preview post::' + post['title'])
 
 
 @app.route('/posts_list', defaults={'page': 1})
@@ -164,7 +168,7 @@ def post_edit(id):
     if session.get('post-preview') and session['post-preview']['action'] == 'add':
         session.pop('post-preview', None)
     return render_template('edit_post.html',
-                           meta_title='Edit post::'+post['data']['title'],
+                           meta_title='Edit post::' + post['data']['title'],
                            post=post['data'],
                            error=False,
                            error_type=False)
@@ -287,14 +291,15 @@ def save_user():
 
 @app.route('/recent_feed')
 def recent_feed():
-    feed = AtomFeed(app.config['BLOG_TITLE']+'::Recent Articles',
+    feed = AtomFeed(app.config['BLOG_TITLE'] + '::Recent Articles',
                     feed_url=request.url, url=request.url_root)
     posts = postClass.get_posts(int(app.config['PER_PAGE']), 0)
     for post in posts['data']:
         feed.add(post['title'], md(post['body']),
                  content_type='html',
                  author=post['author'],
-                 url=make_external(url_for('single_post', permalink=post['permalink'])),
+                 url=make_external(
+                     url_for('single_post', permalink=post['permalink'])),
                  updated=post['date'])
     return feed.get_response()
 
@@ -377,7 +382,8 @@ def install():
             else:
                 session['installed'] = True
                 flash('Successfully installed!', 'success')
-                user_login = userClass.login(user_data['_id'], user_data['new_pass'])
+                user_login = userClass.login(
+                    user_data['_id'], user_data['new_pass'])
                 if user_login['error']:
                     flash(user_login['error'], 'error')
                 else:
@@ -441,4 +447,5 @@ if not app.config['DEBUG']:
     app.logger.addHandler(file_handler)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=app.config['DEBUG'])
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)),
+            debug=app.config['DEBUG'])

@@ -2,6 +2,7 @@ from flask import session
 
 
 class Settings:
+
     def __init__(self, default_config):
         self.collection = default_config['SETTINGS_COLLECTION']
 
@@ -18,10 +19,14 @@ class Settings:
         try:
             cursor = self.collection.find_one()
             if cursor:
-                self.config['PER_PAGE'] = cursor.get('per_page', self.config['PER_PAGE'])
-                self.config['SEARCH'] = cursor.get('use_search', self.config['SEARCH'])
-                self.config['BLOG_TITLE'] = cursor.get('title', self.config['BLOG_TITLE'])
-                self.config['BLOG_DESCRIPTION'] = cursor.get('description', self.config['BLOG_DESCRIPTION'])
+                self.config['PER_PAGE'] = cursor.get(
+                    'per_page', self.config['PER_PAGE'])
+                self.config['SEARCH'] = cursor.get(
+                    'use_search', self.config['SEARCH'])
+                self.config['BLOG_TITLE'] = cursor.get(
+                    'title', self.config['BLOG_TITLE'])
+                self.config['BLOG_DESCRIPTION'] = cursor.get(
+                    'description', self.config['BLOG_DESCRIPTION'])
             return self.config
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
@@ -47,9 +52,11 @@ class Settings:
         self.response['error'] = None
         try:
             self.config['POSTS_COLLECTION'].ensure_index([('date', -1)])
-            self.config['POSTS_COLLECTION'].ensure_index([('tags', 1), ('date', -1)])
+            self.config['POSTS_COLLECTION'].ensure_index(
+                [('tags', 1), ('date', -1)])
             self.config['POSTS_COLLECTION'].ensure_index([('permalink', 1)])
-            self.config['POSTS_COLLECTION'].ensure_index([('query', 1), ('orderby', 1)])
+            self.config['POSTS_COLLECTION'].ensure_index(
+                [('query', 1), ('orderby', 1)])
             self.config['USERS_COLLECTION'].ensure_index([('date', 1)])
 
             post_data = {'title': 'Hello World!',
@@ -85,7 +92,8 @@ class Settings:
         self.response['error'] = None
         try:
             cursor = self.collection.find_one()
-            self.collection.update({'_id': cursor['_id']}, {'$set': data}, upsert=False, multi=False)
+            self.collection.update(
+                {'_id': cursor['_id']}, {'$set': data}, upsert=False, multi=False)
             self.response['data'] = True
             return self.response
         except Exception, e:

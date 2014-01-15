@@ -5,7 +5,7 @@
   * author: http://fernandoguillen.info
   * demo page: http://fguillen.github.com/MDMagick/
 
-  ## Versión
+  ## Version
 
       v0.0.3
 

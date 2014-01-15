@@ -5,6 +5,7 @@ from helper_functions import *
 
 
 class Post:
+
     def __init__(self, default_config):
         self.collection = default_config['POSTS_COLLECTION']
         self.response = {'error': None, 'data': None}
@@ -21,7 +22,8 @@ class Post:
                     {'body': {'$regex': search, '$options': 'i'}},
                     {'preview': {'$regex': search, '$options': 'i'}}]}
         try:
-            cursor = self.collection.find(cond).sort('date', direction=-1).skip(skip).limit(limit)
+            cursor = self.collection.find(cond).sort(
+                'date', direction=-1).skip(skip).limit(limit)
             self.response['data'] = []
             for post in cursor:
                 if 'tags' not in post:
@@ -49,7 +51,8 @@ class Post:
     def get_post_by_permalink(self, permalink):
         self.response['error'] = None
         try:
-            self.response['data'] = self.collection.find_one({'permalink': permalink})
+            self.response['data'] = self.collection.find_one(
+                {'permalink': permalink})
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Post not found..'
@@ -59,12 +62,14 @@ class Post:
     def get_post_by_id(self, post_id):
         self.response['error'] = None
         try:
-            self.response['data'] = self.collection.find_one({'_id': ObjectId(post_id)})
+            self.response['data'] = self.collection.find_one(
+                {'_id': ObjectId(post_id)})
             if self.response['data']:
                 if 'tags' not in self.response['data']:
                     self.response['data']['tags'] = ''
                 else:
-                    self.response['data']['tags'] = ','.join(self.response['data']['tags'])
+                    self.response['data']['tags'] = ','.join(
+                        self.response['data']['tags'])
                 if 'preview' not in self.response['data']:
                     self.response['data']['preview'] = ''
         except Exception, e:
@@ -120,7 +125,8 @@ class Post:
         self.response['error'] = None
         del post_data['date']
         try:
-            self.collection.update({'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
+            self.collection.update(
+                {'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
             self.response['data'] = True
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)

@@ -7,6 +7,7 @@ from flask import session
 
 
 class User:
+
     def __init__(self, default_config):
         self.collection = default_config['USERS_COLLECTION']
         self.username = None
@@ -32,7 +33,8 @@ class User:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'System error..'
 
-        self.response['data'] = {'username': self.username, 'email': self.email}
+        self.response['data'] = {'username':
+                                 self.username, 'email': self.email}
         return self.response
 
     @staticmethod
@@ -77,7 +79,8 @@ class User:
 
     @staticmethod
     def get_gravatar_link(email=''):
-        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url = "http://www.gravatar.com/avatar/" + \
+            hashlib.md5(email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'d': 'retro'})
         return gravatar_url
 
@@ -104,23 +107,30 @@ class User:
                     if user_data['old_pass']:
                         if self.validate_login(exist_user['password'], user_data['old_pass']):
                             if user_data['new_pass'] and user_data['new_pass'] == user_data['new_pass_again']:
-                                password_hash = generate_password_hash(user_data['new_pass'], method='pbkdf2:sha256')
-                                record = {'password': password_hash, 'email': user_data['email']}
+                                password_hash = generate_password_hash(
+                                    user_data['new_pass'], method='pbkdf2:sha256')
+                                record = {'password': password_hash,
+                                          'email': user_data['email']}
                                 try:
-                                    self.collection.update({'_id': user_data['_id']}, {'$set': record}, upsert=False, multi=False)
+                                    self.collection.update(
+                                        {'_id': user_data['_id']}, {'$set': record}, upsert=False, multi=False)
                                     self.response['data'] = True
                                 except Exception, e:
                                     self.print_debug_info(e, self.debug_mode)
-                                    self.response['error'] = 'Update user error..'
+                                    self.response[
+                                        'error'] = 'Update user error..'
                             else:
-                                self.response['error'] = 'New password doesn\'t match..'
+                                self.response[
+                                    'error'] = 'New password doesn\'t match..'
                                 return self.response
                         else:
-                            self.response['error'] = 'Old password doesn\'t match..'
+                            self.response[
+                                'error'] = 'Old password doesn\'t match..'
                             return self.response
                     else:
                         try:
-                            self.collection.update({'_id': user_data['_id']}, {'$set': {'email': user_data['email']}}, upsert=False, multi=False)
+                            self.collection.update(
+                                {'_id': user_data['_id']}, {'$set': {'email': user_data['email']}}, upsert=False, multi=False)
                             self.response['data'] = True
                         except Exception, e:
                             self.print_debug_info(e, self.debug_mode)
@@ -134,8 +144,10 @@ class User:
                     return self.response
                 else:
                     if user_data['new_pass'] and user_data['new_pass'] == user_data['new_pass_again']:
-                        password_hash = generate_password_hash(user_data['new_pass'], method='pbkdf2:sha256')
-                        record = {'_id': user_data['_id'], 'password': password_hash, 'email': user_data['email'], 'date': datetime.datetime.utcnow()}
+                        password_hash = generate_password_hash(
+                            user_data['new_pass'], method='pbkdf2:sha256')
+                        record = {'_id': user_data['_id'], 'password': password_hash, 'email': user_data[
+                            'email'], 'date': datetime.datetime.utcnow()}
                         try:
                             self.collection.insert(record, safe=True)
                             self.response['data'] = True
@@ -143,7 +155,8 @@ class User:
                             self.print_debug_info(e, self.debug_mode)
                             self.response['error'] = 'Create user user error..'
                     else:
-                        self.response['error'] = 'Password cannot be blank and must be the same..'
+                        self.response[
+                            'error'] = 'Password cannot be blank and must be the same..'
                         return self.response
         else:
             self.response['error'] = 'Error..'
