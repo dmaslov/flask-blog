@@ -124,6 +124,8 @@ class Post:
     def edit_post(self, post_id, post_data):
         self.response['error'] = None
         del post_data['date']
+        del post_data['permalink']
+
         try:
             self.collection.update(
                 {'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
