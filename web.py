@@ -295,7 +295,8 @@ def recent_feed():
                     feed_url=request.url, url=request.url_root)
     posts = postClass.get_posts(int(app.config['PER_PAGE']), 0)
     for post in posts['data']:
-        feed.add(post['title'], md(post['body']),
+        post_entry = post['preview'] if post['preview'] else post['body']
+        feed.add(post['title'], md(post_entry),
                  content_type='html',
                  author=post['author'],
                  url=make_external(
