@@ -1,11 +1,16 @@
 <div class="navbar navbar-default navbar-fixed-top">
 	<div class="navbar-header">
 		<ul class="nav navbar-nav">
-			<li><a href="{{ url_for('index') }}" class="navbar-brand">Home</a></li>
+			<li><a href="{{ url_for('index') }}" class="navbar-brand">dizzythinks</a></li>
+
+		{% if pages %}
+		    {% for page in pages %}
+		        <li><a href="{{ page['id'] }}">{{ page['title'] }}</a></li>
+		    {% endfor %}
+		{% endif %}
+
 		{% if session.user %}
 			<li><a href="{{ url_for('logout') }}">Logout</a></li>
-		{% else %}
-			<li><a href="{{ url_for('login') }}">Login</a></li>
 		{% endif %}
 		</ul>
 
@@ -19,10 +24,15 @@
 		<ul class="nav navbar-nav">
 			<li><a href="{{ url_for('recent_feed') }}" class="icon-rss"></a></li>
 		{% if session.user %}
-			<li><a href="{{ url_for('users_list') }}">Users</a></li>
-			<li><a href="{{ url_for('posts') }}">Posts</a></li>
-			<li><a href="{{ url_for('new_post') }}">New post</a></li>
-			<li><a href="{{ url_for('blog_settings') }}">Settings</a></li>
+		  <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+			    <li><a href="{{ url_for('new_post') }}">New post</a></li>
+			    <li><a href="{{ url_for('posts') }}">Posts</a></li>
+			    <li><a href="{{ url_for('users_list') }}">Users</a></li>
+			    <li><a href="{{ url_for('blog_settings') }}">Settings</a></li>
+              </ul>
+        </li>
 		{% endif %}
 		</ul>
 		<form class="navbar-form navbar-right search-form" method="post" action="{{ url_for('search') }}">
