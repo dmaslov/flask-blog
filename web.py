@@ -1,6 +1,6 @@
 import cgi
 import os
-from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
+from flask import Flask, render_template, abort, url_for, request, flash, session, redirect, send_from_directory
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
 from mdx_strike import StrikeExtension
@@ -14,12 +14,16 @@ from helper_functions import *
 
 
 app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 md = Markdown(app)
 md.register_extension(GitHubGistExtension)
 md.register_extension(StrikeExtension)
 md.register_extension(QuoteExtension)
 app.config.from_object('config')
 
+@app.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page-<int:page>')
@@ -29,6 +33,7 @@ def index(page):
     count = postClass.get_total_count()
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
+
 
 
 @app.route('/tag/<tag>', defaults={'page': 1})

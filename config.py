@@ -6,6 +6,7 @@ CONNECTION = pymongo.MongoClient(CONNECTION_STRING)
 '''Leave this as is if you dont have other configuration'''
 DATABASE = CONNECTION.blog
 POSTS_COLLECTION = DATABASE.posts
+PAGES_COLLECTION = DATABASE.pages
 USERS_COLLECTION = DATABASE.users
 SETTINGS_COLLECTION = DATABASE.settings
 
