@@ -21,6 +21,6 @@ $(function(){
         postForm.find('#preview').val('');
     });
     $('a.icon').on('click', function(){
-        return confirm('Are you shure?');
+        return confirm('Are you sure?');
     });
 });
