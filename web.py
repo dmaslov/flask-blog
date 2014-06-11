@@ -84,14 +84,17 @@ def new_post():
     error = False
     error_type = 'validate'
     if request.method == 'POST':
-        if not request.form.get('post-title') or not request.form.get('post-full'):
+        post_title = request.form.get('post-title').strip()
+        post_full = request.form.get('post-full')
+
+        if not post_title or not post_full:
             error = True
         else:
             tags = cgi.escape(request.form.get('post-tags'))
             tags_array = extract_tags(tags)
-            post_data = {'title': request.form.get('post-title'),
+            post_data = {'title': post_title,
                          'preview': request.form.get('post-short'),
-                         'body': request.form.get('post-full'),
+                         'body': post_full,
                          'tags': tags_array,
                          'author': session['user']['username']}
 
