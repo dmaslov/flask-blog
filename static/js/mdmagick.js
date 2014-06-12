@@ -103,7 +103,16 @@ MDM.Actions = {
     var link = prompt( "Link to URL", "http://" );
     if(link) {
         var selection = $( inputElement ).getSelection();
+        var objectValue = $(inputElement).val();
+        if(!selection.text){
+            $(inputElement).val(objectValue + "\n" + 'link description');
+            $(inputElement).setCaretPos(-1);
+            MDM.Utils.selectWholeLines( inputElement );
+            selection = $( inputElement ).getSelection();
+        }
+
         $( inputElement ).replaceSelection( "[" + selection.text + "](" + link + ")" );
+        $( inputElement ).setSelection(selection.start + 1, selection.end + 1); //select description text
     }
   },
 
@@ -147,7 +156,16 @@ MDM.Actions = {
     var link = prompt( "Image URL", "http://" );
     if(link) {
         var selection = $( inputElement ).getSelection();
+        var objectValue = $(inputElement).val();
+        if(!selection.text){
+            $(inputElement).val(objectValue + "\n" + 'img description');
+            $(inputElement).setCaretPos(-1);
+            MDM.Utils.selectWholeLines( inputElement );
+            selection = $( inputElement ).getSelection();
+        }
+
         $( inputElement ).replaceSelection( "![" + selection.text + "](" + link + ")" );
+        $( inputElement ).setSelection(selection.start + 2, selection.end + 2); //select description text
     }
   },
 
