@@ -116,6 +116,7 @@ The word will be replaced with a working gist tag.
 
 ~~To insert an image you also need to select a word that will be used like a title attribute and paste the image URL into the dialog window.~~
 
-You don't need to highlight text to add a link or an image anymore. Now you can simply click some tag in the editor menu and put a link. The 'Markdown' tag will be created automatically with a highlighted temporary description. The existing pasting algorithm works as it did before.
-
 ![insert_image](http://i.imgur.com/suxPgI0.png)
+
+
+Don't need to highlight text to add a link or an image anymore. Now you can simply click some tag in the editor menu and put a link. The 'Markdown' tag will be created automatically with a highlighted temporary description. The existing pasting algorithm works as it did before.
