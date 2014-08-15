@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>&lt;github-gist&gt;</title>
+
+    <!-- Importing Web Component's Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+    <script src="bower_components/polymer/polymer.js"></script>
+
+    <!-- Importing Custom Elements -->
+    <link rel="import" href="github-gist.html">
+    <style>
+        input{
+            margin:10px 0;
+            font-size: 1.2em;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <input type="search" oninput="if(this.value){document.querySelector('github-gist').gistid = this.value}" placeholder="type gist id here" value="e54a2ed1b12934d3e134">
+    <!-- Using Custom Elements -->
+    <github-gist gistid="e54a2ed1b12934d3e134"></github-gist>
+</body>
+</html>

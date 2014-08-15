@@ -1,0 +1,27 @@
+{
+  "name": "github-gist",
+  "version": "0.1.1",
+  "authors": [
+    "Dmitry Maslov <maslov.dmitrij@gmail.com>"
+  ],
+  "description": "A web component to display github gists",
+  "main": "github-gist.html",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "github",
+    "gist"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/dmaslov/github-gist",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.0"
+  }
+}

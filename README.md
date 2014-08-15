@@ -17,6 +17,7 @@ pass:demo
 - [jQuery](http://jquery.com)
 - [Lightbox 2](https://github.com/lokesh/lightbox2)
 - [Markdown](http://daringfireball.net/projects/markdown/syntax)
+- [Polymer](http://www.polymer-project.org)
 
 
 # What it can:
@@ -106,13 +107,13 @@ To insert any tag you need to SELECT a word and then click on a needed tag on th
 
 You can insert github [Gists](https://gist.github.com/).
 
-For this type a word in the editor, select it like you did when you added a tag from the panel, copy the embed gist link from the github gists page and paste it to the dialog window.
+For this click on the Gist tag on the panel, copy the gist id from the github gists page and paste it to the dialog window.
 
 The word will be replaced with a working gist tag.
 
-![gist_page](http://i.imgur.com/Zagr8Uv.png)
+![gist_page](http://i.imgur.com/1hQKsaX.png)
 
-![inser_gist](http://i.imgur.com/nqS4Isz.png)
+![inser_gist](http://i.imgur.com/x5Yb9es.png)
 
 ~~To insert an image you also need to select a word that will be used like a title attribute and paste the image URL into the dialog window.~~
 

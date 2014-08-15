@@ -13,7 +13,7 @@ import settings
 from helper_functions import *
 
 
-app = Flask(__name__)
+app = Flask('FlaskBlog')
 md = Markdown(app)
 md.register_extension(GitHubGistExtension)
 md.register_extension(StrikeExtension)

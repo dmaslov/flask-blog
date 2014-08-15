@@ -4,7 +4,7 @@
     <hr>
     <ul>
     {% for post in recent_posts %}
-        <li><a href="{{ url_for('single_post', permalink=post['permalink']) }}">{{ post['title'] }}</a></li>
+        <li><a href="{{ url_for('single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></li>
     {% endfor %}
     </ul>
     {%- if tags -%}

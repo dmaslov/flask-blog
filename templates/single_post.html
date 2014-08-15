@@ -6,7 +6,7 @@
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="page-header">
-						<h1>{{ post['title'] }}</h1>
+						<h1>{{ post['title'] | safe }}</h1>
 						<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date'] |formatdate }} by {{ post['author'] }}</i></p>
 						<div class="social row-fluid">
 					        <!-- AddThis Button BEGIN -->

@@ -170,11 +170,16 @@ MDM.Actions = {
   },
 
   gist: function( inputElement ){
-    var string = prompt( "Embeded GitHub Gist string", "" );
+    var string = prompt( "GitHub Gist ID", "" );
     if(string) {
-        var regexp = /<script src=\"(\w+\W+.+)\"><\/script>/g;
-        var src = string.replace(regexp, '$1');
-        $( inputElement ).replaceSelection( "\n[gist]" + src + "[/gist]\n" );
+        var selection = $( inputElement ).getSelection();
+        var objectValue = $(inputElement).val();
+        if(!selection.text){
+            $(inputElement).val(objectValue + "\n" + 'link description');
+            $(inputElement).setCaretPos(-1);
+            MDM.Utils.selectWholeLines( inputElement );
+        }
+        $( inputElement ).replaceSelection( "\n[gist]" + string + "[/gist]\n" );
     }
   }
 }

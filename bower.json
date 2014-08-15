@@ -1,0 +1,19 @@
+{
+  "name": "flask_blog",
+  "version": "0.0.0",
+  "authors": [
+    "Dmitry Maslov <maslov.dmitrij@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "github-gist": "~0.1.1"
+  }
+}

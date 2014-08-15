@@ -5,20 +5,21 @@ from markdown.inlinepatterns import Pattern
 
 class GitHubGistExtension(Extension):
     def extendMarkdown(self, md, md_globals):
-        RE = r'\[gist\](\w+\W+.+)\[\/gist\]'
+        RE = r'\[gist\](\w+)\[\/gist\]'
         gistPattern = GitHubGist(RE)
-        md.inlinePatterns.add('script', gistPattern, ">not_strong")
+        md.inlinePatterns.add('github-gist', gistPattern, ">not_strong")
 
 
 class GitHubGist(Pattern):
     def handleMatch(self, m):
-        src = m.group(2).strip()
-        if src:
-            script = etree.Element('script')
-            script.set('src', src)
+        gistid_value = m.group(2).strip()
+        if gistid_value:
+            element = etree.Element('github-gist')
+            element.set('gistid', gistid_value)
         else:
-            script = ''
-        return script
+            element = ''
+
+        return element
 
 
 def makeExtension(configs=None):
