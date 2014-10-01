@@ -34,7 +34,7 @@ function MDM( inputElement ) {
 
   this.activateControls = function( controlsElement ){
     var _self = this;
-    ["bold", "italic", "link", "title", "list", "quote", "code", "img", "strike", "gist"].forEach( function( actionName ){
+    ["bold", "italic", "link", "title", "list", "quote", "code", "multilineCode", "img", "strike", "gist"].forEach( function( actionName ){
       $( controlsElement ).find( ".mdm-" + actionName ).click( function( event ){ _self.action( actionName, event ) } );
     });
   };
@@ -152,6 +152,12 @@ MDM.Actions = {
     $( inputElement ).replaceSelection( "`" + selection.text + "`" );
   },
 
+  multilineCode: function( inputElement ){
+    var selection = $( inputElement ).getSelection();
+    //TODO: cut all empty lines from selection.text
+    $( inputElement ).replaceSelection( "[code]\n" + selection.text + "\n[/code]" );
+  },
+
   img: function( inputElement ){
     var link = prompt( "Image URL", "http://" );
     if(link) {
@@ -232,6 +238,7 @@ MDM.Utils = {
       "    <li class=\"mdm-title\"><a tabindex=\"-1\" title=\"height\" class=\"icon-text-height\" href=\"#mdm-title\"><span>T</span></a></li>" +
       "    <li class=\"mdm-quote\"><a tabindex=\"-1\" title=\"blockquote\" class=\"icon-comment-alt\" href=\"#mdm-quote\"><span>Q</span></a></li>" +
       "    <li class=\"mdm-code\"><a tabindex=\"-1\" title=\"code\" class=\"icon-code\" href=\"#mdm-code\"><span>C</span></a></li>" +
+      "    <li class=\"mdm-multilineCode\"><a tabindex=\"-1\" title=\"multiline-code\" class=\"icon-terminal\" href=\"#mdm-multilineCode\"><span>MLC</span></a></li>" +
       "    <li class=\"mdm-list\"><a tabindex=\"-1\" title=\"list\" class=\"icon-list-ul\" href=\"#mdm-list\"><span>l</span></a></li>" +
       "    <li class=\"mdm-link\"><a tabindex=\"-1\" title=\"link\" class=\"icon-link\" href=\"#mdm-link\"><span>a</span></a></li>" +
       "    <li class=\"mdm-img\"><a tabindex=\"-1\" title=\"img\" class=\"icon-picture\" href=\"#mdm-img\"><span>Img</span></a></li>" +
