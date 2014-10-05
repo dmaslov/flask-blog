@@ -43,6 +43,10 @@ pass:demo
 
 `cd flask-blog`
 
+for python3 user
+
+`git checkout python3.3`
+
 `virtualenv --no-site-packages ./env`
 
 `source ./env/bin/activate`
