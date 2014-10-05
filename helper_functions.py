@@ -1,7 +1,7 @@
 import re
 import string
 import random
-from urlparse import urljoin
+from urllib.parse import urljoin
 from flask import request, url_for, session, flash, redirect
 from functools import wraps
 
