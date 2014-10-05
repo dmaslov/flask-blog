@@ -1,4 +1,4 @@
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import hashlib
 import re
 import datetime
@@ -29,7 +29,7 @@ class User:
             else:
                 self.response['error'] = 'User not found..'
 
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'System error..'
 
@@ -60,7 +60,7 @@ class User:
                 self.response['data'].append({'id': user['_id'],
                                               'email': user['email'],
                                               'date': user['date']})
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Users not found..'
         return self.response
@@ -72,7 +72,7 @@ class User:
             gravatar_url = self.get_gravatar_link(user.get('email', ''))
             self.response['data'] = user
             self.response['data']['gravatar_url'] = gravatar_url
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'User not found..'
         return self.response
@@ -81,7 +81,7 @@ class User:
     def get_gravatar_link(email=''):
         gravatar_url = "http://www.gravatar.com/avatar/" + \
             hashlib.md5(email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'d': 'retro'})
+        gravatar_url += urllib.parse.urlencode({'d': 'retro'})
         return gravatar_url
 
     def delete_user(self, user_id):
@@ -89,7 +89,7 @@ class User:
         try:
             self.collection.remove({'_id': user_id})
             self.response['data'] = True
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Delete user error..'
         return self.response
@@ -115,7 +115,7 @@ class User:
                                     self.collection.update(
                                         {'_id': user_data['_id']}, {'$set': record}, upsert=False, multi=False)
                                     self.response['data'] = True
-                                except Exception, e:
+                                except Exception as e:
                                     self.print_debug_info(e, self.debug_mode)
                                     self.response[
                                         'error'] = 'Update user error..'
@@ -132,7 +132,7 @@ class User:
                             self.collection.update(
                                 {'_id': user_data['_id']}, {'$set': {'email': user_data['email']}}, upsert=False, multi=False)
                             self.response['data'] = True
-                        except Exception, e:
+                        except Exception as e:
                             self.print_debug_info(e, self.debug_mode)
                             self.response['error'] = 'Update user error..'
                 else:
@@ -151,7 +151,7 @@ class User:
                         try:
                             self.collection.insert(record, safe=True)
                             self.response['data'] = True
-                        except Exception, e:
+                        except Exception as e:
                             self.print_debug_info(e, self.debug_mode)
                             self.response['error'] = 'Create user user error..'
                     else:
@@ -176,7 +176,7 @@ class User:
                      'line': sys.exc_info()[2].tb_lineno,
                      'details': str(msg)}
 
-            print error_color
-            print '\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
-                  % (error['type'], error['file'], error['line'], error['details'])
-            print error_end
+            print(error_color)
+            print('\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
+                  % (error['type'], error['file'], error['line'], error['details']))
+            print(error_end)
