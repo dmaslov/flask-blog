@@ -32,10 +32,8 @@ pass:demo
 - [Gravatar](http://gravatar.com) for userpic.
 
 
-# To Do:
-- mongoDB text search
-- comments maybe
-- drafts
+# Requirements:
+- mongoDB >= 2.2
 
 
 # Installation:
