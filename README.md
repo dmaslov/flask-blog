@@ -61,7 +61,7 @@ After this edit the `config.py` file
 - If you use this code on a production sever replace the `DEBUG` variable with `False`.
 
 # Run:
-When you in project dir with actived environment just type in terminal
+Start `mongod`, then when you in project dir with actived environment just type in terminal
 
 `python web.py`
 
