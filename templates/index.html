@@ -21,6 +21,7 @@
 											{%- else -%}
 												{{ post['body']|markdown }}
 											{%- endif -%}
+                                                              
 <p><a href="{{ url_for('post_edit', id=post.id) }}">Edit</a></p>
 
 										</div>
