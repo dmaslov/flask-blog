@@ -93,13 +93,13 @@ class Post:
     def get_tags(self):
         self.response['error'] = None
         try:
-            self.response['data'] = self.collection.aggregate([
+            self.response['data'] = list(self.collection.aggregate([
                 {'$unwind': '$tags'},
                 {'$group': {'_id': '$tags', 'count': {'$sum': 1}}},
                 {'$sort': {'count': -1}},
                 {'$limit': 10},
                 {'$project': {'title': '$_id', 'count': 1, '_id': 0}}
-            ])
+            ]))
             if self.response['data']['result']:
                 self.response['data'] = self.response['data']['result']
             else:
