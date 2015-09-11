@@ -100,11 +100,6 @@ class Post:
                 {'$limit': 10},
                 {'$project': {'title': '$_id', 'count': 1, '_id': 0}}
             ]))
-            if self.response['data']['result']:
-                self.response['data'] = self.response['data']['result']
-            else:
-                self.response['data'] = []
-
         except Exception, e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Get tags error..'

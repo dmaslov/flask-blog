@@ -425,6 +425,13 @@ def is_installed():
                 return redirect(url_for('install'))
 
 
+@app.before_request
+def set_globals():
+    app.jinja_env.globals['csrf_token'] = generate_csrf_token
+    app.jinja_env.globals['recent_posts'] = postClass.get_posts(10, 0)['data']
+    app.jinja_env.globals['tags'] = postClass.get_tags()['data']
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', meta_title='404'), 404
@@ -440,10 +447,7 @@ postClass = post.Post(app.config)
 userClass = user.User(app.config)
 
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-app.jinja_env.globals['csrf_token'] = generate_csrf_token
 app.jinja_env.globals['meta_description'] = app.config['BLOG_DESCRIPTION']
-app.jinja_env.globals['recent_posts'] = postClass.get_posts(10, 0)['data']
-app.jinja_env.globals['tags'] = postClass.get_tags()['data']
 
 if not app.config['DEBUG']:
     import logging

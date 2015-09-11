@@ -149,11 +149,11 @@ class User:
                         record = {'_id': user_data['_id'], 'password': password_hash, 'email': user_data[
                             'email'], 'date': datetime.datetime.utcnow()}
                         try:
-                            self.collection.insert(record, safe=True)
+                            self.collection.insert(record)
                             self.response['data'] = True
                         except Exception, e:
                             self.print_debug_info(e, self.debug_mode)
-                            self.response['error'] = 'Create user user error..'
+                            self.response['error'] = 'Create user error..'
                     else:
                         self.response[
                             'error'] = 'Password cannot be blank and must be the same..'
