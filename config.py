@@ -10,18 +10,18 @@ POSTS_COLLECTION = DATABASE.posts
 USERS_COLLECTION = DATABASE.users
 SETTINGS_COLLECTION = DATABASE.settings
 
-SECRET_KEY = ""
+SECRET_KEY = b""
 basedir = os.path.abspath(os.path.dirname(__file__))
 secret_file = os.path.join(basedir, '.secret')
 if os.path.exists(secret_file):
     # Read SECRET_KEY from .secret file
-    f = open(secret_file, 'r')
+    f = open(secret_file, 'rb')
     SECRET_KEY = f.read().strip()
     f.close()
 else:
     # Generate SECRET_KEY & save it away
     SECRET_KEY = os.urandom(24)
-    f = open(secret_file, 'w')
+    f = open(secret_file, 'wb')
     f.write(SECRET_KEY)
     f.close()
     # Modeify .gitignore to include .secret file
