@@ -41,7 +41,7 @@ pass:demo
 
 `cd flask-blog`
 
-`virtualenv --no-site-packages ./env`
+`python -m venv ./env`
 
 `source ./env/bin/activate`
 

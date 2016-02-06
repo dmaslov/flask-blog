@@ -28,7 +28,7 @@ class Settings:
                 self.config['BLOG_DESCRIPTION'] = cursor.get(
                     'description', self.config['BLOG_DESCRIPTION'])
             return self.config
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'System error..'
 
@@ -84,7 +84,7 @@ class Settings:
                 self.config['USERS_COLLECTION'].drop()
                 self.collection.drop()
             return self.response
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Installation error..'
 
@@ -96,7 +96,7 @@ class Settings:
                 {'_id': cursor['_id']}, {'$set': data}, upsert=False, multi=False)
             self.response['data'] = True
             return self.response
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Settings update error..'
 
@@ -114,7 +114,7 @@ class Settings:
                      'line': sys.exc_info()[2].tb_lineno,
                      'details': str(msg)}
 
-            print error_color
-            print '\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
-                  % (error['type'], error['file'], error['line'], error['details'])
-            print error_end
+            print(error_color)
+            print('\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
+                  % (error['type'], error['file'], error['line'], error['details']))
+            print(error_end)

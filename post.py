@@ -42,7 +42,7 @@ class Post:
                                               'tags': post['tags'],
                                               'author': post['author'],
                                               'comments': post['comments']})
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Posts not found..'
 
@@ -53,7 +53,7 @@ class Post:
         try:
             self.response['data'] = self.collection.find_one(
                 {'permalink': permalink})
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Post not found..'
 
@@ -72,7 +72,7 @@ class Post:
                         self.response['data']['tags'])
                 if 'preview' not in self.response['data']:
                     self.response['data']['preview'] = ''
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Post not found..'
 
@@ -100,7 +100,7 @@ class Post:
                 {'$limit': 10},
                 {'$project': {'title': '$_id', 'count': 1, '_id': 0}}
             ]))
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Get tags error..'
 
@@ -110,7 +110,7 @@ class Post:
         self.response['error'] = None
         try:
             self.response['data'] = self.collection.insert(post_data)
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Adding post error..'
 
@@ -125,7 +125,7 @@ class Post:
             self.collection.update(
                 {'_id': ObjectId(post_id)}, {"$set": post_data}, upsert=False)
             self.response['data'] = True
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Post update error..'
 
@@ -138,7 +138,7 @@ class Post:
                 self.response['data'] = True
             else:
                 self.response['data'] = False
-        except Exception, e:
+        except Exception as e:
             self.print_debug_info(e, self.debug_mode)
             self.response['error'] = 'Deleting post error..'
 
@@ -174,7 +174,7 @@ class Post:
                      'line': sys.exc_info()[2].tb_lineno,
                      'details': str(msg)}
 
-            print error_color
-            print '\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
-                  % (error['type'], error['file'], error['line'], error['details'])
-            print error_end
+            print(error_color)
+            print('\n\n---\nError type: %s in file: %s on line: %s\nError details: %s\n---\n\n'\
+                  % (error['type'], error['file'], error['line'], error['details']))
+            print(error_end)
