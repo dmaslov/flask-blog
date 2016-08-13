@@ -45,7 +45,7 @@ def login_required():
         def wrapped(*args, **kwargs):
             if not session.get('user'):
                 flash('You must be logged in..', 'error')
-                return redirect(url_for('login'))
+                return redirect(url_for('blog.login'))
             return f(*args, **kwargs)
         return wrapped
     return wrapper

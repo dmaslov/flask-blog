@@ -16,7 +16,7 @@ import config
 
 
 # app = Flask('FlaskBlog',)
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/blog')
 md = Markdown(app)
 md.register_extension(GitHubGistExtension)
 md.register_extension(StrikeExtension)
