@@ -111,7 +111,7 @@ def new_post():
                     'post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
                 if request.form.get('post-id'):
                     session[
-                        'post-preview']['redirect'] = url_for('blog.post_edit', id=request.form.get('post-id'))
+                        'post-preview']['redirect'] = url_for('blog.post_edit', post_id=request.form.get('post-id'))
                 else:
                     session['post-preview']['redirect'] = url_for('blog.new_post')
                 return redirect(url_for('blog.post_preview'))
