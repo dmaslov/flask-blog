@@ -7,7 +7,8 @@
 				<div class="col-lg-8">
 					<div class="page-header">
 						<h1>{{ post['title'] | safe }}</h1>
-						<p><span class="icon-time">&nbsp;</span><i>Опубликовано {{ post['date'] |formatdate }} {# {{ post['author'] }}  #}</i></p>						<div class="social row-fluid">
+						<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date'] |formatdate }} by {{ post['author'] }}</i></p>
+						<div class="social row-fluid">
 					        <!-- AddThis Button BEGIN -->
 							<div class="addthis_toolbox addthis_default_style addthis_16x16_style">
 								<a class="addthis_button_twitter"></a>
@@ -26,7 +27,7 @@
 					</div>
 					<div class="infopanel">
 						<div class="tags">
-							<i>теги:</i>
+							<i>tags:</i>
 							{%- if post['tags'] -%}
 								{%- for tag in post['tags'] -%}
 									&nbsp;<a href="{{ url_for('blog.posts_by_tag', tag=tag) }}">{{ tag }}</a>

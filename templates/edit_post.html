@@ -30,7 +30,7 @@
 							{%- endfor -%}
 						{%- endif -%}
 					{%- endwith -%}
-					<form id="post-form" role="form" method="post" action="{{ url_for('new_post') }}">
+					<form id="post-form" role="form" method="post" action="{{ url_for('blog.new_post') }}">
 						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
 								<label class="control-label" for="post-title">Required field</label>

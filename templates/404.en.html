@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+	{%- block head -%}{%- include 'head.html' -%}{%- endblock -%}
+	<body>
+		<div class="container not-found">
+		    <div class="row">
+		        <div class="col-lg-12">
+					<h1>Oops! 404</h1>
+					<p>not found...</p>
+		        </div>
+		    </div>
+		</div>
+		<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script src="{{ url_for('static', filename='main.js') }}"></script>
+	</body>
+</html>

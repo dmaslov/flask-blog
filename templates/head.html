@@ -1,16 +1,16 @@
 <head>
     <title>{%- if meta_title -%}{{ meta_title }}{%- else -%}FlaskBlog{%- endif -%}</title>
-	<meta name="description" content="{{ meta_description }}">
+    <meta name="description" content="{{ meta_description }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-	<link href="{{ url_for('recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
-	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
-	<link href="{{ url_for('static', filename='css/mdmagick.css') }}" rel="stylesheet">
-	<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
-	{%- block additional_css -%}{%- endblock -%}
-	<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
-	<script src="{{ url_for('static', filename='bower_components/platform/platform.js') }}"></script>
-	<script src="{{ url_for('static', filename='bower_components/polymer/polymer.js') }}"></script>
-	<link rel="import" href="{{ url_for('static', filename='bower_components/github-gist/github-gist.html') }}">
+    <link href="{{ url_for('blog.recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ url_for('static', filename='css/mdmagick.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    {%- block additional_css -%}{%- endblock -%}
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='bower_components/platform/platform.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/polymer/polymer.js') }}"></script>
+    <link rel="import" href="{{ url_for('static', filename='bower_components/github-gist/github-gist.html') }}">
 </head>

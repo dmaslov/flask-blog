@@ -1,0 +1,33 @@
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-header">
+		<ul class="nav navbar-nav">
+			<li><a href="{{ url_for('index') }}" class="navbar-brand">Home</a></li>
+		{% if session.user %}
+			<li><a href="{{ url_for('logout') }}">Logout</a></li>
+		{% else %}
+			<li><a href="{{ url_for('login') }}">Login</a></li>
+		{% endif %}
+		</ul>
+
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+	</div>
+	<div class="navbar-collapse collapse" id="navbar-main">
+		<ul class="nav navbar-nav">
+			<li><a href="{{ url_for('recent_feed') }}" class="icon-rss"></a></li>
+		{% if session.user %}
+			<li><a href="{{ url_for('users_list') }}">Users</a></li>
+			<li><a href="{{ url_for('posts') }}">Posts</a></li>
+			<li><a href="{{ url_for('new_post') }}">New post</a></li>
+			<li><a href="{{ url_for('blog_settings') }}">Settings</a></li>
+		{% endif %}
+		</ul>
+		<form class="navbar-form navbar-right search-form" method="post" action="{{ url_for('search') }}">
+            <input type="text" name="query" class="form-control col-lg-8" placeholder="Search">
+			<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+		</form>
+	</div>
+</div>

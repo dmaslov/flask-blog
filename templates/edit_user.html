@@ -17,7 +17,7 @@
 						{%- endif -%}
 					{%- endwith -%}
 					{%- if user -%}
-						<form class="form-user" role="form" method="post" action="{{ url_for('save_user') }}">
+						<form class="form-user" role="form" method="post" action="{{ url_for('blog.save_user') }}">
 							<div class="photo-user">
 								<img src="{{ user['gravatar_url'] }}" class="img-circle">
 							</div>
