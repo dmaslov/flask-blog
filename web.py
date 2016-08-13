@@ -12,7 +12,7 @@ import user
 import pagination
 import settings
 from helper_functions import *
-from . import config
+import config
 
 
 # app = Flask('FlaskBlog',)
