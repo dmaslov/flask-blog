@@ -14,6 +14,8 @@ import settings
 from helper_functions import *
 import config
 
+from flask.ext.cache import Cache
+
 
 # app = Flask('FlaskBlog',)
 app = Flask(__name__, static_url_path='/blog')
@@ -24,9 +26,15 @@ md.register_extension(QuoteExtension)
 md.register_extension(MultilineCodeExtension)
 app.config.from_object(config)
 
+#: Method A: During instantiation of class
+cache = Cache(config={'CACHE_TYPE': 'simple'})
+#: Method B: During init_app call
+cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page-<int:page>')
+@cache.cached(timeout=50)
 def index(page):
     skip = (page - 1) * int(app.config['PER_PAGE'])
     posts_list = postClass.get_posts(int(app.config['PER_PAGE']), skip)
@@ -48,6 +56,7 @@ def posts_by_tag(tag, page):
 
 
 @app.route('/post/<permalink>')
+@cache.cached(timeout=50)
 def single_post(permalink):
     post = postClass.get_post_by_permalink(permalink)
     if not post['data']:

@@ -12,7 +12,7 @@
 								<div class="row">
 									<div class="col-lg-8">
 										<div class="page-header">
-											<h1><a href="{{ url_for('blog.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></h1>
+											<h1><a href="{{ url_for('single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></h1>
 											<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date'] |formatdate }} by {{ post['author'] }}</i></p>
 										</div>
 										<div class="content no-lightbox">
@@ -27,7 +27,7 @@
 												<li class="icon-tags" title="tags"></li>
 												{%- if post['tags'] -%}
 													{%- for tag in post['tags'] -%}
-														&nbsp;<a href="{{ url_for('blog.posts_by_tag', tag=tag) }}">{{ tag }}</a>
+														&nbsp;<a href="{{ url_for('posts_by_tag', tag=tag) }}">{{ tag }}</a>
 													{%- endfor -%}
 												{%- endif -%}
 											</div>

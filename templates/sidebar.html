@@ -4,7 +4,7 @@
     <hr>
     <ul>
     {% for post in recent_posts %}
-        <li><a href="{{ url_for('blog.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></li>
+        <li><a href="{{ url_for('single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></li>
     {% endfor %}
     </ul>
     {%- if tags -%}
@@ -12,7 +12,7 @@
     <hr>
     <ul>
     {% for tag in tags %}
-        <li><a href="{{ url_for('blog.posts_by_tag', page=1, tag=tag['title']) }}">{{ tag['title'] }} <sup class="badge">{{ tag['count'] }}</sup></a></li>
+        <li><a href="{{ url_for('posts_by_tag', page=1, tag=tag['title']) }}">{{ tag['title'] }} <sup class="badge">{{ tag['count'] }}</sup></a></li>
     {% endfor %}
     </ul>
     {%- endif -%}
