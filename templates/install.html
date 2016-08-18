@@ -20,7 +20,7 @@
                         {%- endif -%}
                     {%- endwith -%}
 
-	                <form role="form" method="post" action="{{ url_for('blog.install') }}">
+	                <form role="form" method="post" action="{{ url_for('install') }}">
                         <fieldset>
 	                        <legend>Blog section</legend>
                             <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">

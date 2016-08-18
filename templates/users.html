@@ -17,7 +17,7 @@
 		                        {%- endfor -%}
 		                    {%- endif -%}
 		                {%- endwith -%}
-						<a href="{{ url_for('blog.add_user') }}" class="response btn btn-primary">Add User</a>
+						<a href="{{ url_for('add_user') }}" class="response btn btn-primary">Add User</a>
 						<table class="table table-striped">
 							<tr>
 								<th>Username</th>
@@ -27,13 +27,13 @@
 							</tr>
 							{%- for user in users -%}
 							<tr>
-								<td><a title="Username" href="{{ url_for('blog.edit_user', user_id=user['id']) }}" data-target="_blank">{{ user['id'] }}</a></td>
+								<td><a title="Username" href="{{ url_for('edit_user', user_id=user['id']) }}" data-target="_blank">{{ user['id'] }}</a></td>
 								<td>{{ user['email'] }}</td>
 								<td>{{ user['date'] |formatdate }}</td>
 								<td>
-                                    <a title="Edit" href="{{ url_for('blog.edit_user', user_id=user['id']) }}" class="icon-edit-sign bigger icon"></a>
+                                    <a title="Edit" href="{{ url_for('edit_user', user_id=user['id']) }}" class="icon-edit-sign bigger icon"></a>
                                     {%- if user['id'] != session['user']['username'] -%}
-                                        &nbsp;&nbsp;<a title="Delete" href="{{ url_for('blog.delete_user', user_id=user['id']) }}" class="icon-remove-sign bigger icon"></a>
+                                        &nbsp;&nbsp;<a title="Delete" href="{{ url_for('delete_user', user_id=user['id']) }}" class="icon-remove-sign bigger icon"></a>
                                     {%- endif -%}
                                 </td>
 							</tr>

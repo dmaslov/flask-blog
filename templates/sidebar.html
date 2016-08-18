@@ -1,25 +1,20 @@
 {%- if recent_posts -%}
-    <div class="col-lg-3 visible-lg sidebar">
-        <h2>Последние записи</h2>
-        <hr>
-        <ul>
-        {% for post in recent_posts %}
-            <li><a href="{{ url_for('blog.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></li>
-        {% endfor %}
-        </ul>
-        {%- if tags -%}
-            <h2>Теги</h2>
-            <hr>
-            <ul>
-            {% for tag in tags %}
-                <li><a href="{{ url_for('blog.posts_by_tag', page=1, tag=tag['title']) }}">{{ tag['title'] }} <sup class="badge">{{ tag['count'] }}</sup></a></li>
-            {% endfor %}
-            </ul>
-        {%- endif -%}
-
-        <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
-        <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
-        <div class="ya-share2" data-services="vkontakte,facebook,gplus,twitter,blogger,linkedin,lj" data-counter=""></div>
-
-    </div>
+<div class="col-lg-3 visible-lg sidebar">
+    <h2>Recent articles</h2>
+    <hr>
+    <ul>
+    {% for post in recent_posts %}
+        <li><a href="{{ url_for('blog.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></li>
+    {% endfor %}
+    </ul>
+    {%- if tags -%}
+    <h2>Top tags</h2>
+    <hr>
+    <ul>
+    {% for tag in tags %}
+        <li><a href="{{ url_for('blog.posts_by_tag', page=1, tag=tag['title']) }}">{{ tag['title'] }} <sup class="badge">{{ tag['count'] }}</sup></a></li>
+    {% endfor %}
+    </ul>
+    {%- endif -%}
+</div>
 {%- endif -%}

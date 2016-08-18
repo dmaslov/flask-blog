@@ -13,10 +13,10 @@
 									<div class="col-lg-8">
 										<div class="page-header">
 											<h1><a href="{{ url_for('blog.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></h1>
-                                            <p><span class="icon-time">&nbsp;</span><i>Опубликовано {{ post['date'] |formatdate }}</i></p>
-                                        </div>
-                                        <div class="content no-lightbox">
-                                            {%- if post['preview'] -%}
+											<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date'] |formatdate }} by {{ post['author'] }}</i></p>
+										</div>
+										<div class="content no-lightbox">
+											{%- if post['preview'] -%}
 												{{ post['preview']|markdown }}
 											{%- else -%}
 												{{ post['body']|markdown }}
@@ -41,7 +41,7 @@
 							<div class="row">
 								<div class="col-lg-8">
 									<div class="page-header">
-										<h1>Нет статей...</h1>
+										<h1>Posts not found..</h1>
 									</div>
 								</div>
 							</div>
@@ -52,16 +52,17 @@
 				{% if pagination and pagination.pages > 1 %}
 					<div class="pagination-wrap">
 						<ul class="pagination">
-						    {% for page in pagination.iter_pages() %}
-                                {% if page %}
-                                    <li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
-                                {% else %}
-                                    <li><span class=ellipsis>...</span></li>
-                                {% endif %}
-						    {% endfor %}
-						    {% if pagination.has_next %}
-						        <li><a href="{{ url_for_other_page(pagination.page + 1) }}">&raquo;</a></li>
-                            {% endif %}
+						  {% for page in pagination.iter_pages() %}
+						    {% if page %}
+						        <li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+						    {% else %}
+						      <li><span class=ellipsis>…</span></li>
+						    {% endif %}
+						  {% endfor %}
+						  {% if pagination.has_next %}
+						    <li><a href="{{ url_for_other_page(pagination.page + 1)
+						      }}">&raquo;</a></li>
+						  {% endif %}
 						</ul>
 					</div>
 				{% endif %}

@@ -17,7 +17,7 @@
                         {%- endif -%}
                     {%- endwith -%}
 
-	                <form role="form" method="post" action="{{ url_for('blog.blog_settings') }}">
+	                <form role="form" method="post" action="{{ url_for('blog_settings') }}">
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
                             {%- if error and error_type == 'validate' -%}
                                 <label class="control-label" for="blog-title">Required field</label>
