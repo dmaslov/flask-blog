@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="page-header">
-                    <h1>Login</h1>
+                    <h1>{{ _('Login') }}</h1>
                 </div>
                 <div class="content">
                     {%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -19,15 +19,15 @@
                     <form role="form" method="post" action="{{ url_for('login') }}">
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
                             {%- if error and error_type == 'validate' -%}
-                                <label class="control-label" for="login-username">Required field</label>
+                                <label class="control-label" for="login-username">{{ _('Required field') }}</label>
                             {%- endif -%}
-                            <input type="text" class="form-control" name="login-username" id="login-username" placeholder="Username" required autocomplete="off">
+                            <input type="text" class="form-control" name="login-username" id="login-username" placeholder="{{ _('Username') }}" required autocomplete="off">
                         </div>
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 	                        {%- if error and error_type == 'validate' -%}
                                 <label class="control-label" for="login-password">{{ _('Required field') }}</label>
                             {%- endif -%}
-                            <input type="password" class="form-control" name="login-password" id="login-password" placeholder="Password" required autocomplete="off">
+                            <input type="password" class="form-control" name="login-password" id="login-password" placeholder="{{ _('Password') }}" required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">

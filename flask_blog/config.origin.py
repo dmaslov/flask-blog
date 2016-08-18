@@ -31,8 +31,9 @@ else:
         f.write('.secret\n')
     f.close()
 
-LOG_FILE = "app.log"
+LOG_FILE = os.getenv('LOG_FILE', "/tmp/app.log")
 
-DEBUG = True  # set it to False on production
+# set it to False on production
+DEBUG = boolean(os.getenv('DEBUG', True))
 
 CACHE_TYPE = 'simple'

@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="page-header">
-					<h1>Edit user</h1>
+					<h1>{{ _('Edit user') }}</h1>
 				</div>
 				<div class="content">
 					{%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -25,43 +25,43 @@
 								<fieldset>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-username">Required field</label>
+											<label class="control-label" for="user-username">{{ _('Required field') }}</label>
 										{%- endif -%}
-									    <input type="text" class="form-control" name="user-username" id="user-username" placeholder="Username" value="{{ user['_id'] }}" required autocomplete="off" disabled>
+									    <input type="text" class="form-control" name="user-username" id="user-username" placeholder="{{ _('Username') }}" value="{{ user['_id'] }}" required autocomplete="off" disabled>
 									</div>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-email">Required field</label>
+											<label class="control-label" for="user-email">{{ _('Required field') }}</label>
 										{%- endif -%}
-									    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="{{ user['email'] }}" required autocomplete="off">
+									    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="{{ _('Email') }}" value="{{ user['email'] }}" required autocomplete="off">
 									</div>
 								</fieldset>
 								<fieldset>
 								<legend>Password section</legend>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-old-password">Required field</label>
+											<label class="control-label" for="user-old-password">{{ _('Required field') }}</label>
 										{%- endif -%}
-									    <input type="password" class="form-control" name="user-old-password" id="user-old-password" placeholder="Current Password" autocomplete="off">
+									    <input type="password" class="form-control" name="user-old-password" id="user-old-password" placeholder="{{ _('Current Password') }}" autocomplete="off">
 									</div>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-new-password">Required field</label>
+											<label class="control-label" for="user-new-password">{{ _('Required field') }}</label>
 										{%- endif -%}
-									    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="New Password" autocomplete="off">
+									    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="{{ _('New Password') }}" autocomplete="off">
 									</div>
 									<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 										{%- if error and error_type == 'validate' -%}
-											<label class="control-label" for="user-new-password-again">Required field</label>
+											<label class="control-label" for="user-new-password-again">{{ _('Required field') }}</label>
 										{%- endif -%}
-									    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="New Password Repeat" autocomplete="off">
+									    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="{{ _('New Password Repeat') }}" autocomplete="off">
 									</div>
 								</fieldset>
 								<div class="form-group">
 									<input name="user-id" type="hidden" value="{{ user['_id'] }}">
 									<input name="user-update" type="hidden" value="1">
 									<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-								    <input id="post-submit" type="submit" class="btn btn-primary" value="Submit">
+								    <input id="post-submit" type="submit" class="btn btn-primary" value="{{ _('Submit') }}">
 							    </div>
 							</div>
 						</form>

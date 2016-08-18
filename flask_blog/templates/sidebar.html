@@ -1,6 +1,6 @@
 {%- if recent_posts -%}
 <div class="col-lg-3 visible-lg sidebar">
-    <h2>Recent articles</h2>
+    <h2>{{ _('Recent articles') }}</h2>
     <hr>
     <ul>
     {% for post in recent_posts %}
@@ -8,7 +8,7 @@
     {% endfor %}
     </ul>
     {%- if tags -%}
-    <h2>Top tags</h2>
+    <h2>{{ _('Top tags') }}</h2>
     <hr>
     <ul>
     {% for tag in tags %}
