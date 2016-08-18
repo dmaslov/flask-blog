@@ -14,7 +14,9 @@ import settings
 from helper_functions import *
 import config
 
-from flask.ext.cache import Cache
+from flask_cache import Cache
+from flask_babel import Babel
+
 
 
 # app = Flask('FlaskBlog',)
@@ -31,6 +33,8 @@ cache = Cache(config={'CACHE_TYPE': 'simple'})
 #: Method B: During init_app call
 cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
+babel = Babel(app)
+
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page-<int:page>')
@@ -45,6 +49,7 @@ def index(page):
 
 @app.route('/tag/<tag>', defaults={'page': 1})
 @app.route('/tag/<tag>/page-<int:page>')
+@cache.cached(timeout=50)
 def posts_by_tag(tag, page):
     skip = (page - 1) * int(app.config['PER_PAGE'])
     posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, tag=tag)
@@ -66,6 +71,7 @@ def single_post(permalink):
 
 @app.route('/q/<query>', defaults={'page': 1})
 @app.route('/q/<query>/page-<int:page>')
+@cache.cached(timeout=50)
 def search_results(page, query):
     skip = (page - 1) * int(app.config['PER_PAGE'])
     if query:
@@ -80,6 +86,7 @@ def search_results(page, query):
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@cache.cached(timeout=50)
 def search():
     if request.method != 'POST':
         return redirect(url_for('index'))

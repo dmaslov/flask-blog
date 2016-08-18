@@ -25,13 +25,13 @@
                         </div>
                         <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 	                        {%- if error and error_type == 'validate' -%}
-                                <label class="control-label" for="login-password">Required field</label>
+                                <label class="control-label" for="login-password">{{ _('Required field') }}</label>
                             {%- endif -%}
                             <input type="password" class="form-control" name="login-password" id="login-password" placeholder="Password" required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-                            <input type="submit" class="btn btn-primary" value="Submit">
+                            <input type="submit" class="btn btn-primary" value="{{ _('Submit') }}">
                         </div>
                     </form>
                 </div>

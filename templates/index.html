@@ -41,7 +41,7 @@
 							<div class="row">
 								<div class="col-lg-8">
 									<div class="page-header">
-										<h1>Posts not found..</h1>
+										<h1>{{ _('Posts not found...') }}</h1>
 									</div>
 								</div>
 							</div>
@@ -56,7 +56,7 @@
 						    {% if page %}
 						        <li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
 						    {% else %}
-						      <li><span class=ellipsis>…</span></li>
+						      <li><span class=ellipsis>...</span></li>
 						    {% endif %}
 						  {% endfor %}
 						  {% if pagination.has_next %}

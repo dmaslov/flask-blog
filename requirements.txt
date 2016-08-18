@@ -1,5 +1,6 @@
 flask==0.10.1
 flask-markdown
 Flask-Cache
+Flask-Babel
 pymongo==3.0.3
 gunicorn
