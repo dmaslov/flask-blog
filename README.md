@@ -18,6 +18,8 @@ pass:demo
 - [Lightbox 2](https://github.com/lokesh/lightbox2)
 - [Markdown](http://daringfireball.net/projects/markdown/syntax)
 - [Polymer](http://www.polymer-project.org)
+- [Cache](https://pythonhosted.org/Flask-Cache/)
+- [Babel](https://pythonhosted.org/Flask-Babel/)
 
 
 # What it can:
