@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import cgi
 import os
 from flask import Flask, render_template, abort, url_for, request, flash, session, redirect, Blueprint
@@ -16,6 +18,7 @@ import config
 
 from flask_cache import Cache
 from flask_babel import Babel
+from flask_babel import gettext, ngettext
 
 
 
@@ -311,7 +314,7 @@ def save_user():
     return redirect(url_for('edit_user', id=post_data['_id']))
 
 
-@app.route('/recent_feed')
+@app.route('/feed.xml')
 def recent_feed():
     feed = AtomFeed(app.config['BLOG_TITLE'] + '::Recent Articles', feed_url=request.url, url=request.url_root)
     posts_list = postClass.get_posts(int(app.config['PER_PAGE']), 0)
@@ -359,70 +362,76 @@ def blog_settings():
                            error_type=error_type)
 
 
-@app.route('/install', methods=['GET', 'POST'])
+@app.route('/install.html', methods=['GET'])
 def install():
     if session.get('installed', None):
         return redirect(url_for('index'))
 
     error = False
     error_type = 'validate'
-    print request.form
-    if request.method == 'POST':
-        user_error = False
-        blog_error = False
 
-        user_data = {
-            '_id': request.form.get('user-id', None).lower().strip(),
-            'email': request.form.get('user-email', None),
-            'new_pass': request.form.get('user-new-password', None),
-            'new_pass_again': request.form.get('user-new-password-again', None),
-            'update': False
-        }
-        blog_data = {
-            'title': request.form.get('blog-title', None),
-            'description': request.form.get('blog-description', None),
-            'per_page': request.form.get('blog-perpage', None),
-            'text_search': request.form.get('blog-text-search', None)
-        }
-        blog_data['text_search'] = 1 if blog_data['text_search'] else 0
+    if settingsClass.is_installed():
+        return redirect(url_for('index'))
 
-        for key, value in user_data.items():
-            if not value and key != 'update':
-                user_error = True
-                break
-        for key, value in blog_data.items():
-            if not value and key != 'text_search' and key != 'description':
-                blog_error = True
-                break
+    return render_template(
+        'install.html',
+        default_settings=app.config, error=error, error_type=error_type, meta_title='Install')
 
-        if user_error or blog_error:
-            error = True
-        else:
-            install_result = settingsClass.install(blog_data, user_data)
-            if install_result['error']:
-                for i in install_result['error']:
-                    if i is not None:
-                        flash(i, 'error')
-            else:
-                session['installed'] = True
-                flash('Successfully installed!', 'success')
-                user_login = userClass.login(
-                    user_data['_id'], user_data['new_pass'])
-                if user_login['error']:
-                    flash(user_login['error'], 'error')
-                else:
-                    userClass.start_session(user_login['data'])
-                    flash('You are logged in!', 'success')
-                    return redirect(url_for('posts'))
+
+@app.route('/install.html', methods=['POST'])
+def install_action():
+    if session.get('installed', None):
+        return redirect(url_for('index'))
+
+    error = False
+    error_type = 'validate'
+
+    user_error = False
+    blog_error = False
+
+    user_data = {
+        '_id': request.form.get('user-id', None).lower().strip(),
+        'email': request.form.get('user-email', None),
+        'new_pass': request.form.get('user-new-password', None),
+        'new_pass_again': request.form.get('user-new-password-again', None),
+        'update': False
+    }
+    blog_data = {
+        'title': request.form.get('blog-title', None),
+        'description': request.form.get('blog-description', None),
+        'per_page': request.form.get('blog-perpage', None),
+        'text_search': request.form.get('blog-text-search', None)
+    }
+    blog_data['text_search'] = 1 if blog_data['text_search'] else 0
+
+    for key, value in user_data.items():
+        if not value and key != 'update':
+            user_error = True
+            break
+    for key, value in blog_data.items():
+        if not value and key != 'text_search' and key != 'description':
+            blog_error = True
+            break
+
+    if user_error or blog_error:
+        error = True
     else:
-        if settingsClass.is_installed():
-            return redirect(url_for('index'))
-
-    return render_template('install.html',
-                           default_settings=app.config,
-                           error=error,
-                           error_type=error_type,
-                           meta_title='Install')
+        install_result = settingsClass.install(blog_data, user_data)
+        if install_result['error']:
+            for i in install_result['error']:
+                if i is not None:
+                    flash(i, 'error')
+        else:
+            session['installed'] = True
+            flash(gettext('Successfully installed!'), 'success')
+            user_login = userClass.login(
+                user_data['_id'], user_data['new_pass'])
+            if user_login['error']:
+                flash(user_login['error'], 'error')
+            else:
+                userClass.start_session(user_login['data'])
+                flash(gettext('You are logged in!'), 'success')
+                return redirect(url_for('posts'))
 
 
 @app.before_request

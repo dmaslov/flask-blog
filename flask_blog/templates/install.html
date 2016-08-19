@@ -19,8 +19,7 @@
                             {%- endfor -%}
                         {%- endif -%}
                     {%- endwith -%}
-
-	                <form role="form" method="post" action="{{ url_for('install') }}">
+	                <form role="form" method="post" action="{{ url_for('install_action') }}">
                         <fieldset>
 	                        <legend>{{ _('Blog section') }}</legend>
                             <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
@@ -45,35 +44,35 @@
 						    </div>
                         </fieldset>
 	                    <fieldset>
-	                        <legend>User section</legend>
+	                        <legend>{{ _('User section') }}</legend>
 		                    <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-id">Required field</label>
+									<label class="control-label" for="user-id">{{ _('Required field') }}</label>
 								{%- endif -%}
-							    <input type="text" class="form-control" name="user-id" id="user-id" placeholder="Username" value="" required autocomplete="off">
+							    <input type="text" class="form-control" name="user-id" id="user-id" placeholder="{{ _('Username') }}" value="" required autocomplete="off">
 							</div>
 							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-email">Required field</label>
+									<label class="control-label" for="user-email">{{ _('Required field') }}</label>
 								{%- endif -%}
-							    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="Email" value="" required autocomplete="off">
+							    <input type="email" class="form-control" name="user-email" id="user-email" placeholder="{{ _('Email') }}" value="" required autocomplete="off">
 							</div>
 	                        <div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-new-password">Required field</label>
+									<label class="control-label" for="user-new-password">{{ _('Required field') }}</label>
 								{%- endif -%}
-							    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="Password" value="" required autocomplete="off">
+							    <input type="password" class="form-control" name="user-new-password" id="user-new-password" placeholder="{{ _('Password') }}" value="" required autocomplete="off">
 							</div>
 							<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 								{%- if error and error_type == 'validate' -%}
-									<label class="control-label" for="user-new-password-again">Required field</label>
+									<label class="control-label" for="user-new-password-again">{{ _('Required field') }}</label>
 								{%- endif -%}
-							    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="Repeat Password" value="" required autocomplete="off">
+							    <input type="password" class="form-control" name="user-new-password-again" id="user-new-password-again" placeholder="{{ _('Repeat Password') }}" value="" required autocomplete="off">
 							</div>
                         </fieldset>
                         <div class="form-group">
                             <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-                            <input type="submit" class="btn btn-primary" value="Submit">
+                            <input type="submit" class="btn btn-primary" value="{{ _('Submit') }}">
                         </div>
                     </form>
                 </div>
