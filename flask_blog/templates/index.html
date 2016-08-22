@@ -41,7 +41,7 @@
 							<div class="row">
 								<div class="col-lg-8">
 									<div class="page-header">
-										<h1>Posts not found..</h1>
+										<h1>{{ _('Posts not found...') }}</h1>
 									</div>
 								</div>
 							</div>
@@ -52,17 +52,16 @@
 				{% if pagination and pagination.pages > 1 %}
 					<div class="pagination-wrap">
 						<ul class="pagination">
-						  {% for page in pagination.iter_pages() %}
-						    {% if page %}
-						        <li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
-						    {% else %}
-						      <li><span class=ellipsis>…</span></li>
-						    {% endif %}
-						  {% endfor %}
-						  {% if pagination.has_next %}
-						    <li><a href="{{ url_for_other_page(pagination.page + 1)
-						      }}">&raquo;</a></li>
-						  {% endif %}
+							{% for page in pagination.iter_pages() %}
+								{% if page %}
+									<li {% if page == pagination.page %}class="active"{% endif %}><a href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+								{% else %}
+								<li><span class=ellipsis>...</span></li>
+								{% endif %}
+							{% endfor %}
+							{% if pagination.has_next %}
+								<li><a href="{{ url_for_other_page(pagination.page + 1) }}">&raquo;</a></li>
+							{% endif %}
 						</ul>
 					</div>
 				{% endif %}

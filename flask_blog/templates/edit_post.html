@@ -1,22 +1,24 @@
 {%- extends 'index.html' -%}
 {%- block body -%}
-	{% if session.get('post-preview') %}
+	{% if session.get('post-preview', None) %}
 		{% set post_title = session['post-preview'].get('title', None) %}
 		{% set post_preview = session['post-preview'].get('preview', None) %}
 		{% set post_body = session['post-preview'].get('body', None) %}
-		{% set post_tags = session['post-preview'].get('tags', None) %}
+		{% set tags = session['post-preview'].get('tags', None) %}
+		{% if tags %}
+			{% set post_tags = ','.join(tags) %}
+		{% endif %}
 	{% else %}
-		{% set post_title = '' %}
-		{% set post_preview = '' %}
-		{% set post_body = '' %}
-		{% set post_tags = '' %}
+		{% set post_title = post.get('title') %}
+		{% set post_preview = post.get('preview') %}
+		{% set post_body = post.get('body') %}
+		{% set post_tags = post.get('tags') %}
 	{% endif %}
-
 	<div class="post clearfix">
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="page-header">
-					<h1>New post</h1>
+					<h1>{{ _('Edit Post') }}</h1>
 				</div>
 				<div class="content">
 					{%- with messages = get_flashed_messages(with_categories=True) -%}
@@ -29,30 +31,31 @@
 						{%- endif -%}
 					{%- endwith -%}
 					<form id="post-form" role="form" method="post" action="{{ url_for('new_post') }}">
-						<div class="form-group {% if error and error_type == 'validate' %} has-error{% endif %}">
+						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
-								<label class="control-label" for="post-title">Required field</label>
+								<label class="control-label" for="post-title">{{ _('Required field') }}</label>
 							{%- endif -%}
-						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="Post Title" value="{{ post_title | safe }}" required>
+						    <input type="text" class="form-control" name="post-title" id="post-title" placeholder="{{ _('Post Title') }}" required value="{{ post_title | safe }}">
 					    </div>
 						<div class="form-group">
-						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="Short Text">{{ post_preview | safe }}</textarea>
+						    <textarea id="post-short" name="post-short" class="form-control" rows="3" placeholder="{{ _('Short Text') }}">{{ post_preview | safe }}</textarea>
 					    </div>
-						<div class="form-group {% if error and error_type == 'validate' %} has-error{% endif %}">
+						<div class="form-group {% if error and error_type == 'validate' %}has-error{% endif %}">
 							{%- if error and error_type == 'validate' -%}
-								<label class="control-label" for="post-full">Required field</label>
+								<label class="control-label" for="post-full">{{ _('Required field') }}</label>
 							{%- endif -%}
-						    <textarea id="post-full" name="post-full" class="form-control" rows="6" placeholder="Full Text" required>{{ post_body | safe }}</textarea>
+						    <textarea id="post-full" name="post-full" class="form-control" rows="6" placeholder="{{ _('Full Text') }}" required>{{ post_body | safe }}</textarea>
 					    </div>
 						<div class="form-group">
-						    <label for="post-tags">Tags</label>
-						    <input type="text" name="post-tags" class="form-control" id="post-tags" placeholder="Comma separated" value="{{ ','.join(post_tags) }}">
+						    <label for="post-tags">{{ _('Tags') }}</label>
+						    <input type="text" name="post-tags" class="form-control" id="post-tags" placeholder="{{ _('Comma separated') }}" value="{{ post_tags }}">
 					    </div>
 						<div class="form-group">
 							<input type="hidden" name="post-preview" id="preview">
+							<input type="hidden" name="post-id" value="{{ post['_id'] }}">
 							<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-						    <input id="post-submit" type="submit" class="btn btn-primary" value="Submit">
-							<input id="post-preview" type="submit" class="btn" value="Preview">
+						    <input id="post-submit" type="submit" class="btn btn-primary" value="{{ _('Submit') }}">
+							<input id="post-preview" type="submit" class="btn" value="{{ _('Preview') }}'">
 					    </div>
 					</form>
 				</div>

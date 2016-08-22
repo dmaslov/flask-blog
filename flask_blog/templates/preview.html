@@ -30,10 +30,13 @@
 							<i>tags:</i>
 							{%- if post['tags'] -%}
 								{%- for tag in post['tags'] -%}
-									&nbsp;<a href="{{ url_for('posts_by_tag', tag=tag) }}">{{ tag }}</a>
+									&nbsp;<a href="/tag/{{ tag }}">{{ tag }}</a>
 								{%- endfor -%}
 							{%- endif -%}
 						</div>
+					</div>
+					<div class="preview-back">
+						<a href="{{ session.get('post-preview')['redirect'] }}" class="btn btn-primary btn-lg">{{ _("&lt; Back") }}</a>
 					</div>
 				</div>
 			</div>

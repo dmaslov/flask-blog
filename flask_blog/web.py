@@ -1,6 +1,8 @@
+# coding: utf-8
+
 import cgi
 import os
-from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
+from flask import Flask, render_template, abort, url_for, request, flash, session, redirect, Blueprint
 from flaskext.markdown import Markdown
 from mdx_github_gists import GitHubGistExtension
 from mdx_strike import StrikeExtension
@@ -12,29 +14,45 @@ import user
 import pagination
 import settings
 from helper_functions import *
+import config
+
+from flask_cache import Cache
+from flask_babel import Babel
+from flask_babel import gettext, ngettext
 
 
-app = Flask('FlaskBlog')
+
+# app = Flask('FlaskBlog',)
+app = Flask(__name__, static_url_path='/blog')
 md = Markdown(app)
 md.register_extension(GitHubGistExtension)
 md.register_extension(StrikeExtension)
 md.register_extension(QuoteExtension)
 md.register_extension(MultilineCodeExtension)
-app.config.from_object('config')
+app.config.from_object(config)
+
+#: Method A: During instantiation of class
+cache = Cache(config={'CACHE_TYPE': 'simple'})
+#: Method B: During init_app call
+cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+
+babel = Babel(app)
 
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page-<int:page>')
+@cache.cached(timeout=50)
 def index(page):
     skip = (page - 1) * int(app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
+    posts_list = postClass.get_posts(int(app.config['PER_PAGE']), skip)
     count = postClass.get_total_count()
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
+    return render_template('index.html', posts=posts_list['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
 
 
 @app.route('/tag/<tag>', defaults={'page': 1})
 @app.route('/tag/<tag>/page-<int:page>')
+@cache.cached(timeout=50)
 def posts_by_tag(tag, page):
     skip = (page - 1) * int(app.config['PER_PAGE'])
     posts = postClass.get_posts(int(app.config['PER_PAGE']), skip, tag=tag)
@@ -46,6 +64,7 @@ def posts_by_tag(tag, page):
 
 
 @app.route('/post/<permalink>')
+@cache.cached(timeout=50)
 def single_post(permalink):
     post = postClass.get_post_by_permalink(permalink)
     if not post['data']:
@@ -55,20 +74,22 @@ def single_post(permalink):
 
 @app.route('/q/<query>', defaults={'page': 1})
 @app.route('/q/<query>/page-<int:page>')
+@cache.cached(timeout=50)
 def search_results(page, query):
     skip = (page - 1) * int(app.config['PER_PAGE'])
     if query:
-        posts = postClass.get_posts(
+        posts_list = postClass.get_posts(
             int(app.config['PER_PAGE']), skip, search=query)
     else:
-        posts = []
-        posts['data'] = []
+        posts_list = dict()
+        posts_list['data'] = []
     count = postClass.get_total_count(search=query)
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Search results')
+    return render_template('index.html', posts=posts_list['data'], pagination=pag, meta_title='Search results')
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@cache.cached(timeout=50)
 def search():
     if request.method != 'POST':
         return redirect(url_for('index'))
@@ -107,7 +128,7 @@ def new_post():
                     'post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
                 if request.form.get('post-id'):
                     session[
-                        'post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
+                        'post-preview']['redirect'] = url_for('post_edit', post_id=request.form.get('post-id'))
                 else:
                     session['post-preview']['redirect'] = url_for('new_post')
                 return redirect(url_for('post_preview'))
@@ -152,38 +173,38 @@ def post_preview():
 def posts(page):
     session.pop('post-preview', None)
     skip = (page - 1) * int(app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
+    posts_list = postClass.get_posts(int(app.config['PER_PAGE']), skip)
     count = postClass.get_total_count()
     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
 
-    if not posts['data']:
+    if not posts_list['data']:
         abort(404)
 
-    return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Posts')
+    return render_template('posts.html', posts=posts_list['data'], pagination=pag, meta_title='Posts')
 
 
-@app.route('/post_edit?id=<id>')
+@app.route('/post_edit?id=<post_id>')
 @login_required()
-def post_edit(id):
-    post = postClass.get_post_by_id(id)
-    if post['error']:
-        flash(post['error'], 'error')
+def post_edit(post_id):
+    post_upd = postClass.get_post_by_id(post_id)
+    if post_upd['error']:
+        flash(post_upd['error'], 'error')
         return redirect(url_for('posts'))
 
     if session.get('post-preview') and session['post-preview']['action'] == 'add':
         session.pop('post-preview', None)
     return render_template('edit_post.html',
-                           meta_title='Edit post::' + post['data']['title'],
-                           post=post['data'],
+                           meta_title='Edit post::' + post_upd['data']['title'],
+                           post=post_upd['data'],
                            error=False,
                            error_type=False)
 
 
-@app.route('/post_delete?id=<id>')
+@app.route('/post_delete?id=<post_id>')
 @login_required()
-def post_del(id):
+def post_del(post_id):
     if postClass.get_total_count() > 1:
-        response = postClass.delete_post(id)
+        response = postClass.delete_post(post_id)
         if response['data'] is True:
             flash('Post removed!', 'success')
         else:
@@ -217,10 +238,9 @@ def login():
         if session.get('user'):
             return redirect(url_for('posts'))
 
-    return render_template('login.html',
-                           meta_title='Login',
-                           error=error,
-                           error_type=error_type)
+    return render_template(
+        'login.html',
+        meta_title='Login', error=error, error_type=error_type)
 
 
 @app.route('/logout')
@@ -244,20 +264,20 @@ def add_user():
     return render_template('add_user.html', gravatar_url=gravatar_url, meta_title='Add user')
 
 
-@app.route('/edit_user?id=<id>')
+@app.route('/edit_user?id=<user_id>')
 @login_required()
-def edit_user(id):
-    user = userClass.get_user(id)
-    return render_template('edit_user.html', user=user['data'], meta_title='Edit user')
+def edit_user(user_id):
+    user_data = userClass.get_user(user_id)
+    return render_template('edit_user.html', user=user_data['data'], meta_title='Edit user')
 
 
-@app.route('/delete_user?id=<id>')
+@app.route('/delete_user?id=<user_id>')
 @login_required()
-def delete_user(id):
-    if id != session['user']['username']:
-        user = userClass.delete_user(id)
-        if user['error']:
-            flash(user['error'], 'error')
+def delete_user(user_id):
+    if user_id != session['user']['username']:
+        user_del = userClass.delete_user(user_id)
+        if user_del['error']:
+            flash(user_del['error'], 'error')
         else:
             flash('User deleted!', 'success')
     return redirect(url_for('users_list'))
@@ -281,9 +301,9 @@ def save_user():
         else:
             return redirect(url_for('add_user'))
     else:
-        user = userClass.save_user(post_data)
-        if user['error']:
-            flash(user['error'], 'error')
+        user_update = userClass.save_user(post_data)
+        if user_update['error']:
+            flash(user_update['error'], 'error')
             if post_data['update']:
                 return redirect(url_for('edit_user', id=post_data['_id']))
             else:
@@ -294,19 +314,19 @@ def save_user():
     return redirect(url_for('edit_user', id=post_data['_id']))
 
 
-@app.route('/recent_feed')
+@app.route('/feed.xml')
 def recent_feed():
-    feed = AtomFeed(app.config['BLOG_TITLE'] + '::Recent Articles',
-                    feed_url=request.url, url=request.url_root)
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), 0)
-    for post in posts['data']:
-        post_entry = post['preview'] if post['preview'] else post['body']
-        feed.add(post['title'], md(post_entry),
-                 content_type='html',
-                 author=post['author'],
-                 url=make_external(
-                     url_for('single_post', permalink=post['permalink'])),
-                 updated=post['date'])
+    feed = AtomFeed(app.config['BLOG_TITLE'] + '::Recent Articles', feed_url=request.url, url=request.url_root)
+    posts_list = postClass.get_posts(int(app.config['PER_PAGE']), 0)
+    for post_item in posts_list['data']:
+        post_entry = post_item['preview'] if post_item['preview'] else post_item['body']
+        feed.add(
+            post_item['title'],
+            md(post_entry),
+            content_type='html',
+            author=post_item['author'],
+            url=make_external(url_for('single_post', permalink=post_item['permalink'])),
+            updated=post_item['date'])
     return feed.get_response()
 
 
@@ -342,69 +362,76 @@ def blog_settings():
                            error_type=error_type)
 
 
-@app.route('/install', methods=['GET', 'POST'])
+@app.route('/install.html', methods=['GET'])
 def install():
     if session.get('installed', None):
         return redirect(url_for('index'))
 
     error = False
     error_type = 'validate'
-    if request.method == 'POST':
-        user_error = False
-        blog_error = False
 
-        user_data = {
-            '_id': request.form.get('user-id', None).lower().strip(),
-            'email': request.form.get('user-email', None),
-            'new_pass': request.form.get('user-new-password', None),
-            'new_pass_again': request.form.get('user-new-password-again', None),
-            'update': False
-        }
-        blog_data = {
-            'title': request.form.get('blog-title', None),
-            'description': request.form.get('blog-description', None),
-            'per_page': request.form.get('blog-perpage', None),
-            'text_search': request.form.get('blog-text-search', None)
-        }
-        blog_data['text_search'] = 1 if blog_data['text_search'] else 0
+    if settingsClass.is_installed():
+        return redirect(url_for('index'))
 
-        for key, value in user_data.items():
-            if not value and key != 'update':
-                user_error = True
-                break
-        for key, value in blog_data.items():
-            if not value and key != 'text_search' and key != 'description':
-                blog_error = True
-                break
+    return render_template(
+        'install.html',
+        default_settings=app.config, error=error, error_type=error_type, meta_title='Install')
 
-        if user_error or blog_error:
-            error = True
-        else:
-            install_result = settingsClass.install(blog_data, user_data)
-            if install_result['error']:
-                for i in install_result['error']:
-                    if i is not None:
-                        flash(i, 'error')
-            else:
-                session['installed'] = True
-                flash('Successfully installed!', 'success')
-                user_login = userClass.login(
-                    user_data['_id'], user_data['new_pass'])
-                if user_login['error']:
-                    flash(user_login['error'], 'error')
-                else:
-                    userClass.start_session(user_login['data'])
-                    flash('You are logged in!', 'success')
-                    return redirect(url_for('posts'))
+
+@app.route('/install.html', methods=['POST'])
+def install_action():
+    if session.get('installed', None):
+        return redirect(url_for('index'))
+
+    error = False
+    error_type = 'validate'
+
+    user_error = False
+    blog_error = False
+
+    user_data = {
+        '_id': request.form.get('user-id', None).lower().strip(),
+        'email': request.form.get('user-email', None),
+        'new_pass': request.form.get('user-new-password', None),
+        'new_pass_again': request.form.get('user-new-password-again', None),
+        'update': False
+    }
+    blog_data = {
+        'title': request.form.get('blog-title', None),
+        'description': request.form.get('blog-description', None),
+        'per_page': request.form.get('blog-perpage', None),
+        'text_search': request.form.get('blog-text-search', None)
+    }
+    blog_data['text_search'] = 1 if blog_data['text_search'] else 0
+
+    for key, value in user_data.items():
+        if not value and key != 'update':
+            user_error = True
+            break
+    for key, value in blog_data.items():
+        if not value and key != 'text_search' and key != 'description':
+            blog_error = True
+            break
+
+    if user_error or blog_error:
+        error = True
     else:
-        if settingsClass.is_installed():
-            return redirect(url_for('index'))
-
-    return render_template('install.html',
-                           default_settings=app.config,
-                           error=error,
-                           error_type=error_type,
-                           meta_title='Install')
+        install_result = settingsClass.install(blog_data, user_data)
+        if install_result['error']:
+            for i in install_result['error']:
+                if i is not None:
+                    flash(i, 'error')
+        else:
+            session['installed'] = True
+            flash(gettext('Successfully installed!'), 'success')
+            user_login = userClass.login(
+                user_data['_id'], user_data['new_pass'])
+            if user_login['error']:
+                flash(user_login['error'], 'error')
+            else:
+                userClass.start_session(user_login['data'])
+                flash(gettext('You are logged in!'), 'success')
+                return redirect(url_for('posts'))
 
 
 @app.before_request
@@ -434,6 +461,8 @@ def set_globals():
 
 @app.errorhandler(404)
 def page_not_found(error):
+    # TODO: logging error
+    print error
     return render_template('404.html', meta_title='404'), 404
 
 
@@ -449,6 +478,7 @@ userClass = user.User(app.config)
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['meta_description'] = app.config['BLOG_DESCRIPTION']
 
+
 if not app.config['DEBUG']:
     import logging
     from logging import FileHandler
@@ -457,5 +487,7 @@ if not app.config['DEBUG']:
     app.logger.addHandler(file_handler)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)),
-            debug=app.config['DEBUG'])
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8080)),
+        debug=app.config['DEBUG'])

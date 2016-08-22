@@ -1,0 +1,6 @@
+.secret
+*.pyc
+.env/
+build/
+.vscode/
+flask_blog.egg-info/
